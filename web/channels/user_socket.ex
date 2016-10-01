@@ -2,7 +2,7 @@ defmodule MicrocrawlerWebapp.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "room:*", MicrocrawlerWebapp.RoomChannel
+  channel "worker:*", MicrocrawlerWebapp.WorkerChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
