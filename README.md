@@ -2,6 +2,14 @@
 
 Microcrawler Web Application written in Elixir / Phoenix
 
+## Prerequisites
+
+- [erlang](https://www.erlang.org/)
+- [elixir](http://elixir-lang.org/)
+- [phoenix](http://www.phoenixframework.org/)
+- [nodejs / npm](https://nodejs.org/en/)
+- [PostgreSQL](https://www.postgresql.org/)
+
 ## Getting Started
 
 To start your Phoenix app:
