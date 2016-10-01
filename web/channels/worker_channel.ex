@@ -12,7 +12,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
   def handle_in("ping", payload, socket) do
     IO.puts "Received ping"
     IO.inspect payload
-    push socket, "pong", payload
+    push socket, "pong", Map.merge(payload, %{ts: :os.system_time(:milli_seconds)})
     {:reply, {:ok, payload}, socket}
   end
 
