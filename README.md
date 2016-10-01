@@ -1,4 +1,8 @@
-# MicrocrawlerWebapp
+# Microcrawler Webapp
+
+Microcrawler Web Application written in Elixir / Phoenix
+
+## Getting Started
 
 To start your Phoenix app:
 
