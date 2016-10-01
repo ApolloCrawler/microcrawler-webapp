@@ -9,10 +9,16 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     {:error, %{reason: "unauthorized"}}
   end
 
+  def handle_in("ping", payload, socket) do
+    IO.puts "Received ping"
+    IO.inspect payload
+    {:reply, {:ok, payload}, socket}
+  end
+
   def handle_in(event, payload, socket) do
-      IO.puts "Received event"
-      IO.inspect event
-      IO.inspect payload
-      {:noreply, socket}
-    end
+    IO.puts "Received event"
+    IO.inspect event
+    IO.inspect payload
+    {:noreply, socket}
+  end
 end
