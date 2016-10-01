@@ -1,5 +1,11 @@
 {
-    "repository": {},
+    "name": "microcrawler-webapp",
+    "version": "0.0.1",
+    "description": "Microcrawler Web Application",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ApolloCrawler/microcrawler-webapp.git"
+    },
     "license": "MIT",
     "scripts": {
         "deploy": "brunch build --production",
