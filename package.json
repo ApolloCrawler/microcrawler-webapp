@@ -6,7 +6,17 @@
         "type": "git",
         "url": "git+https://github.com/ApolloCrawler/microcrawler-webapp.git"
     },
+    "keywords": [
+        "microcrawler",
+        "crawler",
+        "scrapper"
+    ],
+    "author": "Tomas Korcak <korczis@gmail.com>",
     "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/ApolloCrawler/microcrawler-webapp/issues"
+    },
+    "homepage": "https://github.com/ApolloCrawler/microcrawler-webapp#readme",
     "scripts": {
         "deploy": "brunch build --production",
         "watch": "brunch watch --stdin"
