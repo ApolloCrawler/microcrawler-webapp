@@ -1,4 +1,6 @@
-# MicrocrawlerWebapp
+# Microcrawler Webapp
+
+## Getting Started
 
 To start your Phoenix app:
 
