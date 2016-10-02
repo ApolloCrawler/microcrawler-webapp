@@ -19,6 +19,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
   def application do
     [mod: {MicrocrawlerWebapp, []},
       applications: [
+        :graphql,
         :phoenix,
         # :phoenix_pubsub_rabbitmq,
         :phoenix_pubsub,
@@ -27,8 +28,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
         :logger,
         :gettext,
         :phoenix_ecto,
-        :postgrex,
-        :graphql
+        :postgrex
       ]
     ]
   end

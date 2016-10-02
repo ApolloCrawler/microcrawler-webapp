@@ -13,6 +13,10 @@ defmodule MicrocrawlerWebapp.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :graphql do
+    plug :accepts, ["json"]
+  end
+
   scope "/", MicrocrawlerWebapp do
     pipe_through :browser # Use the default browser stack
 
@@ -20,7 +24,15 @@ defmodule MicrocrawlerWebapp.Router do
   end
 
   # Other scopes may use custom stacks.
-  scope "/api", MicrocrawlerWebapp do
+  scope "/api/v1", as: :api_v1, alias: MicrocrawlerWebapp.API.V1 do
     pipe_through :api
+
+    get "/test", ApiController, :index
+  end
+
+  scope "/graphql", MicrocrawlerWebapp do
+    pipe_through :graphql
+
+    get "/", GraphqlController, :index
   end
 end
