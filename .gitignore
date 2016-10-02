@@ -24,3 +24,6 @@ erl_crash.dump
 # /config/prod.secret.exs
 
 npm-debug.log
+
+web/static/assets/js/main.bundle.js
+web/static/assets/js/maps

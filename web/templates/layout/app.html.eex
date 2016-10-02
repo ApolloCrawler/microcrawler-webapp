@@ -9,7 +9,6 @@
 
     <title>Hello MicrocrawlerWebapp!</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
-    <script src="<%= static_path(@conn, "/js/main.bundle.js") %>"></script>
   </head>
 
   <body>
@@ -32,5 +31,6 @@
 
     </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/main.bundle.js") %>"></script>
   </body>
 </html>
