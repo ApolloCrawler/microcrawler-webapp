@@ -5,7 +5,8 @@ defmodule MicrocrawlerWebapp.GraphqlController do
     res = GraphQL.execute(MicrocrawlerWebapp.TestSchema.schema, query)
     case res do
         {:ok, data} -> json conn, data
-        {:error, reasons} -> json conn, %{:errors => reasons}
+        {:error, %{:errors => errors}} -> json conn, %{:errors => errors}
+        {:error, errors} -> json conn, %{:errors => errors}
     end
   end
 
