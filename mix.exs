@@ -20,6 +20,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
     [mod: {MicrocrawlerWebapp, []},
       applications: [
         :phoenix,
+        # :phoenix_pubsub_rabbitmq,
         :phoenix_pubsub,
         :phoenix_html,
         :cowboy,
@@ -46,6 +47,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
+      # {:phoenix_pubsub_rabbitmq, "0.0.1"},
       {:phoenix_html, "~> 2.6"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:poison, "~> 2.2.0"},
