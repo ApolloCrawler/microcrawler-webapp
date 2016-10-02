@@ -2,12 +2,15 @@ defmodule MicrocrawlerWebapp.GraphqlController do
   use MicrocrawlerWebapp.Web, :controller
 
   def index(conn, %{"query" => query}) do
-    {:ok, data} = GraphQL.execute(MicrocrawlerWebapp.TestSchema.schema, query)
-    json conn, data
+    res = GraphQL.execute(MicrocrawlerWebapp.TestSchema.schema, query)
+    case res do
+        {:ok, data} -> json conn, data
+        {:error, reasons} -> json conn, %{:errors => reasons}
+    end
   end
 
   def index(conn, params) do
     IO.inspect params
-    json conn, %{id: 1}
+    json conn, %{}
   end
 end
