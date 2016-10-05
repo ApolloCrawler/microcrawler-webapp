@@ -28,7 +28,8 @@ defmodule MicrocrawlerWebapp.Mixfile do
         :logger,
         :gettext,
         :phoenix_ecto,
-        :postgrex
+        :postgrex,
+        :amqp
       ]
     ]
   end
@@ -52,7 +53,9 @@ defmodule MicrocrawlerWebapp.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:poison, "~> 2.2.0"},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"}
+      {:cowboy, "~> 1.0"},
+      {:amqp_client, git: "https://github.com/jbrisbin/amqp_client.git", override: true},
+      {:amqp, "~> 0.1.4"}
     ]
   end
 
