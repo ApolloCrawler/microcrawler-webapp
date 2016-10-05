@@ -8,8 +8,10 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
 
     {:ok, conn} = AMQP.Connection.open
     {:ok, chan} = AMQP.Channel.open(conn)
+
     socket = assign(socket, :rabb_conn, conn)
     socket = assign(socket, :rabb_chan, chan)
+
     AMQP.Queue.declare(chan, "workq", durable: true)
     AMQP.Basic.qos(chan, prefetch_count: 1)
     AMQP.Basic.consume(chan, "workq", nil)
