@@ -12,10 +12,12 @@ import { Socket } from 'phoenix';
 export default class App extends PureComponent {
   componentDidMount() {
     const socket = new Socket('/socket', {
-      params: { token: window.userToken || null }
+      params: { token: window.userToken || null },
+      logger: (kind, msg, data) => {
+        console.log(`${kind}: ${msg}`, data);
+      }
     });
     socket.connect();
-
 
     const channel = socket.channel('worker:lobby', {});
     channel.join()
