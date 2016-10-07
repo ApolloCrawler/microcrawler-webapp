@@ -2,6 +2,10 @@
 
 Microcrawler Web Application written in Elixir / Phoenix
 
+## Status
+
+[![Build Status](https://travis-ci.org/ApolloCrawler/microcrawler-webapp.svg?branch=master)](https://travis-ci.org/ApolloCrawler/microcrawler-webapp)
+
 ## Prerequisites
 
 - [erlang](https://www.erlang.org/)
