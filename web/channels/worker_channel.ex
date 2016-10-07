@@ -1,10 +1,12 @@
 defmodule MicrocrawlerWebapp.WorkerChannel do
   use Phoenix.Channel
 
+  require Logger
+
   def join("worker:lobby", payload, socket) do
-    IO.puts "Received join - worker:lobby"
-    IO.puts Poison.encode_to_iodata!(payload, pretty: true)
-    IO.inspect self
+    Logger.debug "Received join - worker:lobby"
+    Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
+    Logger.debug inspect(self)
 
     {:ok, conn} = AMQP.Connection.open
     {:ok, chan} = AMQP.Channel.open(conn)
@@ -26,15 +28,15 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
   end
 
   def handle_in("ping", payload, socket) do
-    IO.puts "Received event - ping"
-    IO.puts Poison.encode_to_iodata!(payload, pretty: true)
+    Logger.debug "Received event - ping"
+    Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
     push socket, "pong", Map.merge(payload, %{ts: :os.system_time(:milli_seconds)})
     {:reply, {:ok, payload}, socket}
   end
 
   def handle_in("done", payload, socket) do
-    IO.puts "Received event - done"
-    IO.puts Poison.encode_to_iodata!(payload, pretty: true)
+    Logger.debug "Received event - done"
+    Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
     AMQP.Basic.ack(
       socket.assigns[:rabb_chan],
       socket.assigns[:rabb_meta].delivery_tag
@@ -43,28 +45,28 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
   end
 
   def handle_in(event, payload, socket) do
-    IO.puts "Received event - #{event}"
-    IO.puts Poison.encode_to_iodata!(payload, pretty: true)
+    Logger.debug "Received event - #{event}"
+    Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
     {:noreply, socket}
   end
 
   def handle_info({:basic_deliver, payload, meta}, socket) do
-    IO.puts "Received from rabbit - #{payload}"
+    Logger.debug "Received from rabbit - #{payload}"
     push socket, "crawl", %{payload: payload}
     {:noreply, assign(socket, :rabb_meta, meta)}
   end
 
   def handle_info(msg, socket) do
-    IO.inspect msg
-    IO.inspect self
+    Logger.debug inspect(msg)
+    Logger.debug inspect(self)
     # IO.inspect socket
     {:noreply, socket}
   end
 
   def terminate(reason, socket) do
-    IO.inspect reason
-    IO.inspect self
-    IO.inspect socket
+    Logger.debug inspect(reason)
+    Logger.debug inspect(self)
+    Logger.debug inspect(socket)
     AMQP.Connection.close(socket.assigns[:rabb_conn])
     :ok
   end
