@@ -10,6 +10,9 @@ services:
 os:
   - "linux"
 
+node_js:
+  - "6"
+
 elixir:
   - 1.3.0
 
@@ -41,3 +44,5 @@ install:
   - mix ecto.create
   - mix ecto.migrate
   - dot -Tpng deps_tree.dot -o deps_tree.png
+  - npm install
+  - npm run gulp
