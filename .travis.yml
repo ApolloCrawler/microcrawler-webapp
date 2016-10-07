@@ -29,6 +29,7 @@ addons:
 
 before_script:
   - "sleep 10"
+  - psql -c "ALTER USER postgres WITH PASSWORD 'postgres';" -U postgres
 
 install:
   - ./.travis/install.sh
@@ -37,4 +38,6 @@ install:
   - mix deps.get
   - mix deps.compile
   - mix deps.tree --format dot
+  - mix ecto.create
+  - mix ecto.migrate
   - dot -Tpng deps_tree.dot -o deps_tree.png
