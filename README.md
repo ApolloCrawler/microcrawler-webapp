@@ -5,6 +5,9 @@ Microcrawler Web Application written in Elixir / Phoenix
 ## Status
 
 [![Build Status](https://travis-ci.org/ApolloCrawler/microcrawler-webapp.svg?branch=master)](https://travis-ci.org/ApolloCrawler/microcrawler-webapp)
+[![Dependency Status](https://david-dm.org/ApolloCrawler/microcrawler-webapp.svg)](https://david-dm.org/ApolloCrawler/microcrawler-webapp)
+[![devDependency Status](https://david-dm.org/ApolloCrawler/microcrawler-webapp/dev-status.svg)](https://david-dm.org/ApolloCrawler/microcrawler-webapp#info=devDependencies)
+[![license](https://img.shields.io/github/license/ApolloCrawler/microcrawler-webapp.svg?maxAge=2592000)]()
 
 ## Prerequisites
 
