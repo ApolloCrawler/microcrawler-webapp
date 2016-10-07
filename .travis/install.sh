@@ -2,7 +2,7 @@
 
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
   brew update # get list of latest packages
-  brew install libcouchbase
+  brew install libcouchbase erlang elixir
 else
   # Only needed during first-time setup:
   wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-2-amd64.deb
