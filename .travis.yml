@@ -9,7 +9,6 @@ services:
 
 os:
   - "linux"
-  - "osx"
 
 env:
   - CXX=g++-4.8 TRAVIS_NODE_VERSION="6"
