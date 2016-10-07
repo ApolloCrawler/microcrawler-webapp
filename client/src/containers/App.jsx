@@ -1,45 +1,37 @@
 import React, { PureComponent } from 'react';
 
+import { IndexLink } from 'react-router';
+import { LinkContainer } from 'react-router-bootstrap';
+
+import Nav from 'react-bootstrap/lib/Nav';
+import Navbar from 'react-bootstrap/lib/Navbar';
+import NavItem from 'react-bootstrap/lib/NavItem';
+
 export default class App extends PureComponent {
   render() {
+    const styles = require('./App.scss');
+
     return (
-      <div>
-        <div className="jumbotron">
-          <h2>Welcome to Phoenix!</h2>
-          <p className="lead">A productive web framework that<br />does not compromise speed and maintainability.</p>
-        </div>
+      <div className={styles.app}>
+        <Navbar fixedTop>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>
+                <div className={styles.brand}/>
+                <span>Microcrawler</span>
+              </IndexLink>
+            </Navbar.Brand>
+            <Navbar.Toggle/>
+          </Navbar.Header>
 
-        <div className="row marketing">
-          <div className="col-lg-6">
-            <h4>Resources</h4>
-            <ul>
-              <li>
-                <a href="http://phoenixframework.org/docs/overview">Guides</a>
-              </li>
-              <li>
-                <a href="https://hexdocs.pm/phoenix">Docs</a>
-              </li>
-              <li>
-                <a href="https://github.com/phoenixframework/phoenix">Source</a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="col-lg-6">
-            <h4>Help</h4>
-            <ul>
-              <li>
-                <a href="http://groups.google.com/group/phoenix-talk">Mailing list</a>
-              </li>
-              <li>
-                <a href="http://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on freenode IRC</a>
-              </li>
-              <li>
-                <a href="https://twitter.com/elixirphoenix">@elixirphoenix</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+          <Navbar.Collapse eventKey={0}>
+            <Nav navbar>
+              <LinkContainer to="/">
+                <NavItem eventKey={1}>Home</NavItem>
+              </LinkContainer>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
       </div>
     );
   }

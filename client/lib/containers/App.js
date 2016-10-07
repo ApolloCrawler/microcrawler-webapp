@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6,9 +6,25 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require('react-router');
+
+var _reactRouterBootstrap = require('react-router-bootstrap');
+
+var _Nav = require('react-bootstrap/lib/Nav');
+
+var _Nav2 = _interopRequireDefault(_Nav);
+
+var _Navbar = require('react-bootstrap/lib/Navbar');
+
+var _Navbar2 = _interopRequireDefault(_Navbar);
+
+var _NavItem = require('react-bootstrap/lib/NavItem');
+
+var _NavItem2 = _interopRequireDefault(_NavItem);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28,106 +44,48 @@ var App = function (_PureComponent) {
   }
 
   _createClass(App, [{
-    key: "render",
+    key: 'render',
     value: function render() {
+      var styles = require('./App.scss');
+
       return _react2.default.createElement(
-        "div",
-        null,
+        'div',
+        { className: styles.app },
         _react2.default.createElement(
-          "div",
-          { className: "jumbotron" },
+          _Navbar2.default,
+          { fixedTop: true },
           _react2.default.createElement(
-            "h2",
+            _Navbar2.default.Header,
             null,
-            "Welcome to Phoenix!"
-          ),
-          _react2.default.createElement(
-            "p",
-            { className: "lead" },
-            "A productive web framework that",
-            _react2.default.createElement("br", null),
-            "does not compromise speed and maintainability."
-          )
-        ),
-        _react2.default.createElement(
-          "div",
-          { className: "row marketing" },
-          _react2.default.createElement(
-            "div",
-            { className: "col-lg-6" },
             _react2.default.createElement(
-              "h4",
-              null,
-              "Resources"
-            ),
-            _react2.default.createElement(
-              "ul",
+              _Navbar2.default.Brand,
               null,
               _react2.default.createElement(
-                "li",
-                null,
+                _reactRouter.IndexLink,
+                { to: '/', activeStyle: { color: '#33e0ff' } },
+                _react2.default.createElement('div', { className: styles.brand }),
                 _react2.default.createElement(
-                  "a",
-                  { href: "http://phoenixframework.org/docs/overview" },
-                  "Guides"
-                )
-              ),
-              _react2.default.createElement(
-                "li",
-                null,
-                _react2.default.createElement(
-                  "a",
-                  { href: "https://hexdocs.pm/phoenix" },
-                  "Docs"
-                )
-              ),
-              _react2.default.createElement(
-                "li",
-                null,
-                _react2.default.createElement(
-                  "a",
-                  { href: "https://github.com/phoenixframework/phoenix" },
-                  "Source"
+                  'span',
+                  null,
+                  'Microcrawler'
                 )
               )
-            )
+            ),
+            _react2.default.createElement(_Navbar2.default.Toggle, null)
           ),
           _react2.default.createElement(
-            "div",
-            { className: "col-lg-6" },
+            _Navbar2.default.Collapse,
+            { eventKey: 0 },
             _react2.default.createElement(
-              "h4",
-              null,
-              "Help"
-            ),
-            _react2.default.createElement(
-              "ul",
-              null,
+              _Nav2.default,
+              { navbar: true },
               _react2.default.createElement(
-                "li",
-                null,
+                _reactRouterBootstrap.LinkContainer,
+                { to: '/' },
                 _react2.default.createElement(
-                  "a",
-                  { href: "http://groups.google.com/group/phoenix-talk" },
-                  "Mailing list"
-                )
-              ),
-              _react2.default.createElement(
-                "li",
-                null,
-                _react2.default.createElement(
-                  "a",
-                  { href: "http://webchat.freenode.net/?channels=elixir-lang" },
-                  "#elixir-lang on freenode IRC"
-                )
-              ),
-              _react2.default.createElement(
-                "li",
-                null,
-                _react2.default.createElement(
-                  "a",
-                  { href: "https://twitter.com/elixirphoenix" },
-                  "@elixirphoenix"
+                  _NavItem2.default,
+                  { eventKey: 1 },
+                  'Home'
                 )
               )
             )

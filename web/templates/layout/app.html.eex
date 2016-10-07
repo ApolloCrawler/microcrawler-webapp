@@ -8,11 +8,20 @@
     <meta name="author" content="">
 
     <title>Hello MicrocrawlerWebapp!</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+
+    <!-- Default Phoenix style -->
+    <!-- link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>" -->
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap-theme.min.css">
   </head>
 
   <body>
     <div class="container">
+      <!--
       <header class="header">
         <nav role="navigation">
           <ul class="nav nav-pills pull-right">
@@ -24,6 +33,7 @@
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      -->
 
       <main role="main">
         <%= render @view_module, @view_template, assigns %>
