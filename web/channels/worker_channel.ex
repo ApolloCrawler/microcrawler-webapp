@@ -32,6 +32,16 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     {:reply, {:ok, payload}, socket}
   end
 
+  def handle_in("done", payload, socket) do
+    IO.puts "Received event - done"
+    IO.puts Poison.encode_to_iodata!(payload, pretty: true)
+    AMQP.Basic.ack(
+      socket.assigns[:rabb_chan],
+      socket.assigns[:rabb_meta].delivery_tag
+    )
+    {:noreply, socket}
+  end
+
   def handle_in(event, payload, socket) do
     IO.puts "Received event - #{event}"
     IO.puts Poison.encode_to_iodata!(payload, pretty: true)
@@ -40,10 +50,8 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
 
   def handle_info({:basic_deliver, payload, meta}, socket) do
     IO.puts "Received from rabbit - #{payload}"
-    AMQP.Basic.ack(socket.assigns[:rabb_chan], meta.delivery_tag)
-    {:noreply, socket}
-    # TODO
-    # - misto ack poslat pozdeji zpravu do workeru a az se vrati odpoved, tak poslat ack
+    push socket, "crawl", %{payload: payload}
+    {:noreply, assign(socket, :rabb_meta, meta)}
   end
 
   def handle_info(msg, socket) do
