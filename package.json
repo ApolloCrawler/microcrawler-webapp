@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ApolloCrawler/microcrawler-webapp#readme",
   "scripts": {
+    "check-updates": "./node_modules/npm-check-updates/bin/ncu",
     "deploy": "brunch build --production",
     "flow": "./node_modules/flow-bin/cli.js",
     "gulp": "./node_modules/gulp/bin/gulp.js",
@@ -74,6 +75,7 @@
     "gulp-react": "^3.1.0",
     "gulp-sourcemaps": "^1.6.0",
     "javascript-brunch": "~2.0.0",
+    "npm-check-updates": "^2.8.4",
     "uglify-js-brunch": "~2.0.1"
   }
 }
