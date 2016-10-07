@@ -24,10 +24,10 @@ export default class App extends PureComponent {
             <Navbar.Toggle/>
           </Navbar.Header>
 
-          <Navbar.Collapse eventKey={0}>
+          <Navbar.Collapse>
             <Nav navbar>
               <LinkContainer to="/">
-                <NavItem eventKey={1}>Home</NavItem>
+                <NavItem>Home</NavItem>
               </LinkContainer>
             </Nav>
           </Navbar.Collapse>

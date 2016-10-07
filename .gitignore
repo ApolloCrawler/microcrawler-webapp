@@ -7,6 +7,8 @@
 # Generated on crash by the VM
 erl_crash.dump
 
+/client/lib
+
 # Static artifacts
 /node_modules
 
