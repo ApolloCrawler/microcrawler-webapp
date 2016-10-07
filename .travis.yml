@@ -11,6 +11,7 @@ os:
   - "linux"
 
 env:
+  - CXX=g++-4.8
   - TRAVIS_NODE_VERSION="6"
   - TRAVIS_NODE_VERSION="5"
 
@@ -19,9 +20,6 @@ elixir:
 
 otp_release:
   - 18.2.1
-
-env:
-  - CXX=g++-4.8
 
 addons:
   apt:
