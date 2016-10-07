@@ -46,3 +46,8 @@ install:
   - npm install
   - npm run check-updates
   - npm run gulp
+
+notifications:
+  email:
+    - korczis@gmail.com
+    - lv.bossek@gmail.com
