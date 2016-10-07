@@ -2,6 +2,11 @@ language: elixir
 
 sudo: required
 
+services:
+  - elasticsearch
+  - postgresql
+  - rabbitmq
+
 os:
   - "linux"
 
