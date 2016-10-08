@@ -9,6 +9,7 @@ import NavItem from 'react-bootstrap/lib/NavItem';
 
 import { Socket } from 'phoenix';
 
+import config from '../../config';
 import logger from '../../helpers/logger';
 
 export default class App extends PureComponent {
@@ -38,7 +39,7 @@ export default class App extends PureComponent {
             <Navbar.Brand>
               <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>
                 <span className={styles.brand} />
-                <span>Microcrawler</span>
+                <span>{config.app.name}</span>
               </IndexLink>
             </Navbar.Brand>
             <Navbar.Toggle/>
