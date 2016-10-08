@@ -1,7 +1,7 @@
 defmodule MicrocrawlerWebapp.Endpoint do
   use Phoenix.Endpoint, otp_app: :microcrawler_webapp
 
-  socket "/socket", MicrocrawlerWebapp.UserSocket
+  socket "/socket", MicrocrawlerWebapp.DefaultSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #

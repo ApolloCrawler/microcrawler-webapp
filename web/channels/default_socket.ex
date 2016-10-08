@@ -1,7 +1,8 @@
-defmodule MicrocrawlerWebapp.UserSocket do
+defmodule MicrocrawlerWebapp.DefaultSocket do
   use Phoenix.Socket
 
   ## Channels
+  channel "client:*", MicrocrawlerWebapp.ClientChannel
   channel "worker:*", MicrocrawlerWebapp.WorkerChannel
 
   ## Transports

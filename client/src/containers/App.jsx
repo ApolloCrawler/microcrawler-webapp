@@ -19,7 +19,7 @@ export default class App extends PureComponent {
     });
     socket.connect();
 
-    const channel = socket.channel('worker:lobby', {});
+    const channel = socket.channel('client:lobby', {});
     channel.join()
       .receive('error', () => {
         console.log('Connection error');
