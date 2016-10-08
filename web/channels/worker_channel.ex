@@ -4,13 +4,19 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
   require Logger
 
   alias MicrocrawlerWebapp.ActiveWorkers
+  alias MicrocrawlerWebapp.Endpoint
 
-  def join("worker:lobby", payload, socket) do
+  def send_joined_workers_info() do
+    Endpoint.broadcast("worker:lobby", "send_worker_info", %{})
+  end
+
+  def join("worker:lobby", worker_info, socket) do
     Logger.debug "Received join - worker:lobby"
-    Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
+    Logger.debug Poison.encode_to_iodata!(worker_info, pretty: true)
     Logger.debug inspect(self)
 
-    ActiveWorkers.worker_joined(payload)
+    ActiveWorkers.update_joined_worker_info(worker_info)
+    socket = assign(socket, :worker_info, worker_info)
 
     {:ok, conn} = AMQP.Connection.open
     {:ok, chan} = AMQP.Channel.open(conn)
@@ -65,6 +71,14 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     Logger.debug inspect(msg)
     Logger.debug inspect(self)
     # IO.inspect socket
+    {:noreply, socket}
+  end
+
+  intercept ["send_worker_info"]
+
+  def handle_out("send_worker_info", _msg, socket) do
+    Logger.debug "Received out event - send_worker_info"
+    ActiveWorkers.update_joined_worker_info(socket.assigns[:worker_info])
     {:noreply, socket}
   end
 

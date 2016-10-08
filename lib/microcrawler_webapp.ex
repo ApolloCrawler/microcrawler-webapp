@@ -8,13 +8,13 @@ defmodule MicrocrawlerWebapp do
 
     # Define workers and child supervisors to be supervised
     children = [
-      worker(MicrocrawlerWebapp.ActiveWorkers, []),
       # Start the Ecto repository
       supervisor(MicrocrawlerWebapp.Repo, []),
       # Start the endpoint when the application starts
       supervisor(MicrocrawlerWebapp.Endpoint, []),
       # Start your own worker by calling: MicrocrawlerWebapp.Worker.start_link(arg1, arg2, arg3)
       # worker(MicrocrawlerWebapp.Worker, [arg1, arg2, arg3]),
+      worker(MicrocrawlerWebapp.ActiveWorkers, []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
