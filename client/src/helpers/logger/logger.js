@@ -1,3 +1,5 @@
+import config from '../../config';
+
 export default class Logger {
   debug(...args) {
     this.log(...args);
@@ -26,6 +28,8 @@ export default class Logger {
   /* eslint-disable class-methods-use-this */
 
   static log(...args) {
-    console.log('logger:', ...args);
+    if (config.logger.enabled) {
+      console.log('logger:', ...args);
+    }
   }
 }
