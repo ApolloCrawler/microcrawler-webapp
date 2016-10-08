@@ -30,3 +30,7 @@ npm-debug.log
 web/static/assets/js*.png
 web/static/assets/js/main.bundle.js
 web/static/assets/js/maps
+
+# webpack-isomorphic-tools
+/webpack-stats.json
+/webpack-assets.json

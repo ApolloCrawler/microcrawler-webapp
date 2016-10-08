@@ -35,7 +35,7 @@ export default class App extends PureComponent {
           <Navbar.Header>
             <Navbar.Brand>
               <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>
-                <div className={styles.brand}/>
+                <span className={styles.brand} />
                 <span>Microcrawler</span>
               </IndexLink>
             </Navbar.Brand>

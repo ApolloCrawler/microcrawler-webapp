@@ -7,7 +7,6 @@ import gutil from 'gulp-util';
 import react from 'gulp-react';
 import sourcemaps from 'gulp-sourcemaps';
 import webpack from 'webpack';
-import WebpackDevServer from 'webpack-dev-server';
 
 import webpackConfig from './webpack/webpack.config.babel';
 
@@ -20,6 +19,7 @@ const path = {
     'client/src/**/*.jsx'
   ],
   styles: [
+    'client/src/**/*.less',
     'client/src/**/*.scss',
   ],
   tests: [
@@ -117,6 +117,6 @@ gulp.task('webpack', ['test'], (callback) => {
   });
 });
 
-gulp.task('watch', () => {
+gulp.task('watch', ['build'], () => {
   gulp.watch([...path.sources, ...path.styles, ...path.tests], ['build']);
 });

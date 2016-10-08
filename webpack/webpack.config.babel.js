@@ -1,55 +1,80 @@
 import path from 'path';
+import webpack from 'webpack';
 
-// https://github.com/halt-hammerzeit/webpack-isomorphic-tools
-var WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
-var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'));
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import WriteFilePlugin from 'write-file-webpack-plugin';
+
+// Heavily inspired by https://github.com/ramsaylanier/WordExpress/blob/master/webpack.config.js
 
 module.exports = {
+  devtool: 'source-map',
+  context: path.resolve(__dirname, '..'),
 	entry: {
 	  main: './client/lib/index.js'
 	},
 	output: {
 		path: path.join(__dirname, '..', 'web', 'static', 'assets', 'js'),
-		publicPath: '../dist/',
+		publicPath: '/',
 		filename: '[name].bundle.js',
 		chunkFilename: '[id].bundle.js',
-        libraryTarget: 'var',
-        library: 'Microcrawler'
+    libraryTarget: 'var',
+    library: 'Microcrawler'
 	},
+  progress: true,
+  resolve: {
+    modulesDirectories: [
+      'client/lib',
+      'node_modules'
+    ],
+    extensions: ['', '.json', '.js', '.jsx']
+  },
   module: {
     loaders: [
       {
+        test: /\.css$/,
+        loader: 'style!css?modules&localIdentName=[name]---[local]---[hash:base64:5]'
+      },,
+      {
         test: /\.less$/,
-        loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!less?outputStyle=expanded&sourceMap'
+        loaders: [
+          'style',
+          'css',
+          'less'
+        ]
+      },
+      {
+        test: /\.png$/,
+        loader: 'url-loader',
+        query: {
+          mimetype: 'image/png'
+        }
       },
       {
         test: /\.scss$/,
-        loaders: ["style", "css", "sass"]
-      },
-      {
-        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url?limit=10000&mimetype=application/font-woff"
-      },
-      {
-        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url?limit=10000&mimetype=application/font-woff"
-      },
-      {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/octet-stream"
-      },
-      {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file"
-      },
-      {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml"
-      },
-      {
-        test: webpackIsomorphicToolsPlugin.regular_expression('images'),
-        loader: 'url-loader?limit=10240'
+        loaders: [
+          'style?sourceMap',
+          'css?modules&importLoaders=1&localIdentName=[name]--[local]',
+          'sass?sourceMap'
+        ],
+        exclude: /node_modules/
       }
-    ]
+    ],
   },
+
   plugins: [
-    webpackIsomorphicToolsPlugin
-  ]
+    new WriteFilePlugin(),
+    new ExtractTextPlugin('app.css', {
+      allChunks: true
+    }),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('dev')
+    })
+  ],
+
+  node: {
+    fs: 'empty'
+  }
 };

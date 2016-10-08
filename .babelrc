@@ -2,6 +2,19 @@
   "presets": [
       "es2015",
       "react"
-  ]
+  ],
+
+  "plugins": [
+    "transform-runtime",
+    "add-module-exports",
+    "transform-decorators-legacy",
+    "transform-react-display-name"
+  ],
+
+  "env": {
+    "development": {
+      "plugins": []
+    }
+  }
 }
 
