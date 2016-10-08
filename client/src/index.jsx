@@ -7,4 +7,4 @@ import logger from './helpers/logger';
 
 ReactDOM.render(<App />, document.getElementById('app'));
 
-logger.info('Single Page Application created');
+logger.info('Single Page Application created.');

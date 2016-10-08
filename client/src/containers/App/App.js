@@ -9,12 +9,14 @@ import NavItem from 'react-bootstrap/lib/NavItem';
 
 import { Socket } from 'phoenix';
 
+import logger from '../../helpers/logger';
+
 export default class App extends PureComponent {
   componentDidMount() {
     const socket = new Socket('/socket', {
       params: { token: window.userToken || null },
       logger: (kind, msg, data) => {
-        console.log(`${kind}: ${msg}`, data);
+        logger.debug(`${kind}: ${msg}`, data);
       }
     });
     socket.connect();
@@ -22,7 +24,7 @@ export default class App extends PureComponent {
     const channel = socket.channel('client:lobby', {});
     channel.join()
       .receive('error', () => {
-        console.log('Connection error');
+        logger.error('Connection error');
       });
   }
 
