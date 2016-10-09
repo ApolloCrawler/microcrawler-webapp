@@ -28,12 +28,16 @@ defmodule MicrocrawlerWebapp.ActiveWorkers do
     {:reply, Map.values(state), state}
   end
 
-  def handle_cast({:update_joined_worker_info, pid, worker}, state) do
-    unless Map.has_key?(state, pid) do
+  def handle_cast({:update_joined_worker_info, pid, new_info}, state) do
+    info = case Map.fetch(state, pid) do
+      {:ok, current_info} ->
+        Map.merge(current_info, new_info)
+      :error ->
         Process.monitor(pid)
+        new_info
     end
-    ClientChannel.update_worker(worker)
-    {:noreply, Map.put(state, pid, worker)}
+    ClientChannel.update_worker(info)
+    {:noreply, Map.put(state, pid, info)}
   end
 
   def handle_info({:DOWN, _ref, :process, pid, reason}, state) do

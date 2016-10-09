@@ -15,7 +15,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     Logger.debug Poison.encode_to_iodata!(worker_info, pretty: true)
     Logger.debug inspect(self)
 
-    ActiveWorkers.update_joined_worker_info(worker_info)
+    ActiveWorkers.update_joined_worker_info(%{join: worker_info})
     socket = assign(socket, :worker_info, worker_info)
 
     {:ok, conn} = AMQP.Connection.open
@@ -40,6 +40,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
   def handle_in("ping", payload, socket) do
     Logger.debug "Received event - ping"
     Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
+    ActiveWorkers.update_joined_worker_info(%{ping: payload})
     push socket, "pong", Map.merge(payload, %{ts: :os.system_time(:milli_seconds)})
     Logger.debug "Connected: #{inspect(ActiveWorkers.joined_workers)}"
     {:reply, {:ok, payload}, socket}
