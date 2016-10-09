@@ -1,4 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { IndexLink } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -12,7 +14,16 @@ import { Socket } from 'phoenix';
 import config from '../../config';
 import logger from '../../helpers/logger';
 
-export default class App extends PureComponent {
+@connect(
+  state => ({
+    user: state.user
+  }),
+  { pushState: push })
+export default class App extends Component {
+  static propTypes = {
+    children: PropTypes.object.isRequired
+  };
+
   componentDidMount() {
     const socket = new Socket('/socket', {
       params: { token: window.userToken || null },
@@ -50,9 +61,16 @@ export default class App extends PureComponent {
               <LinkContainer to="/">
                 <NavItem>Home</NavItem>
               </LinkContainer>
+              <LinkContainer to="/workers">
+                <NavItem>Workers</NavItem>
+              </LinkContainer>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
+
+        <div className={styles.appContent}>
+          {this.props.children}
+        </div>
       </div>
     );
   }

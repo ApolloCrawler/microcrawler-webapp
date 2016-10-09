@@ -5,6 +5,7 @@ import {IndexRoute, Route} from 'react-router';
 import App from './containers/App';
 import Intro from './containers/Intro';
 import NotFound from './containers/NotFound';
+import Workers from './containers/Workers';
 
 export default (/* store */) => {
   // const requireLogin = (nextState, replace, cb) => {
@@ -30,6 +31,8 @@ export default (/* store */) => {
   return (
     <Route path="/" component={App}>
       <IndexRoute component={Intro}/>
+
+      <Route path="workers" component={Workers}/>
 
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />
