@@ -14,14 +14,25 @@ import { Socket } from 'phoenix';
 import config from '../../config';
 import logger from '../../helpers/logger';
 
+import * as workerActions from '../../redux/modules/workers';
+
 @connect(
   state => ({
     user: state.user
   }),
-  { pushState: push })
+  {
+    pushState: push,
+    ...workerActions
+  }
+)
 export default class App extends Component {
   static propTypes = {
-    children: PropTypes.object.isRequired
+    children: PropTypes.object.isRequired,
+
+    // workersAdd: PropTypes.func,
+    // workersRemove: PropTypes.func,
+    // workersSet: PropTypes.func,
+    workersUpdate: PropTypes.func,
   };
 
   componentDidMount() {
@@ -38,6 +49,10 @@ export default class App extends Component {
       .receive('error', () => {
         logger.error('Connection error');
       });
+
+    channel.on('update_worker', (payload) => {
+      this.props.workersUpdate(payload);
+    });
   }
 
   render() {
@@ -59,9 +74,6 @@ export default class App extends Component {
           <Navbar.Collapse>
             <Nav navbar>
               <LinkContainer to="/">
-                <NavItem>Home</NavItem>
-              </LinkContainer>
-              <LinkContainer to="/workers">
                 <NavItem>Workers</NavItem>
               </LinkContainer>
             </Nav>

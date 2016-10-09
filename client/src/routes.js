@@ -30,7 +30,7 @@ export default (/* store */) => {
    */
   return (
     <Route path="/" component={App}>
-      <IndexRoute component={Intro}/>
+      <IndexRoute component={Workers}/>
 
       <Route path="intro" component={Intro}/>
       <Route path="workers" component={Workers}/>

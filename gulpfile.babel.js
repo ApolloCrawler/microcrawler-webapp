@@ -62,7 +62,7 @@ gulp.task('babel', ['copy'], () => {
     .pipe(gulp.dest(path.lib));
 });
 
-gulp.task('build', ['install', 'babel', 'lint', 'typecheck', 'webpack', 'test']);
+gulp.task('build', ['babel', 'lint', 'typecheck', 'webpack', 'test']);
 
 gulp.task('lint', () => {
   // ESLint ignores files with "node_modules" paths.
