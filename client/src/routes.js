@@ -32,6 +32,7 @@ export default (/* store */) => {
     <Route path="/" component={App}>
       <IndexRoute component={Intro}/>
 
+      <Route path="intro" component={Intro}/>
       <Route path="workers" component={Workers}/>
 
       { /* Catch all route */ }
