@@ -8,7 +8,10 @@
     }
   },
   "rules": {
+    "arrow-body-style": 0,
+    "arrow-parens": 0,
     "comma-dangle": 0,
+    "no-constant-condition": 0,
     "global-require": 0,
     "max-len": 0,
     "no-console": 0,
@@ -20,6 +23,11 @@
     "semi": 2
   },
   "globals": {
+    "__DEVELOPMENT__": true,
+    "__CLIENT__": true,
+    "__SERVER__": true,
+    "__DISABLE_SSR__": true,
+    "__DEVTOOLS__": true,
     "document": true,
     "window": true
   }

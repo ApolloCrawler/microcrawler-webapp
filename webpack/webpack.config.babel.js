@@ -10,15 +10,18 @@ module.exports = {
   devtool: 'source-map',
   context: path.resolve(__dirname, '..'),
 	entry: {
-	  main: './client/lib/index.js'
+	  main: [
+      'react-hot-loader/patch',
+	    './client/lib/index.js'
+    ]
 	},
 	output: {
 		path: path.join(__dirname, '..', 'web', 'static', 'assets', 'js'),
 		publicPath: '/',
 		filename: '[name].bundle.js',
 		chunkFilename: '[id].bundle.js',
-    libraryTarget: 'var',
-    library: 'Microcrawler'
+    // libraryTarget: 'var',
+    // library: 'Microcrawler'
 	},
   progress: true,
   resolve: {
@@ -62,6 +65,13 @@ module.exports = {
   },
 
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('dev'),
+      __CLIENT__: true,
+      __SERVER__: false,
+      __DEVELOPMENT__: true,
+      __DEVTOOLS__: true  // <-------- DISABLE redux-devtools HERE
+    }),
     new WriteFilePlugin(),
     new ExtractTextPlugin('app.css', {
       allChunks: true
@@ -69,9 +79,6 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('dev')
-    })
   ],
 
   node: {

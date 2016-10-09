@@ -1,19 +1,21 @@
 {
   "presets": [
-      "es2015",
-      "react"
+    "es2015",
+    "react",
+    "stage-0"
   ],
-
   "plugins": [
     "transform-runtime",
     "add-module-exports",
     "transform-decorators-legacy",
+    "transform-export-extensions",
     "transform-react-display-name"
   ],
-
   "env": {
     "development": {
-      "plugins": []
+      "plugins": [
+        "typecheck"
+      ]
     }
   }
 }
