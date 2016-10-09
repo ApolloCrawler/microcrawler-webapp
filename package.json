@@ -92,6 +92,7 @@
     "flow-bin": "^0.33.0",
     "gulp-eslint": "^3.0.1",
     "gulp-flowtype": "^1.0.0",
+    "gulp-install": "^0.6.0",
     "gulp-react": "^3.1.0",
     "gulp-sourcemaps": "^1.6.0",
     "javascript-brunch": "~2.0.0",

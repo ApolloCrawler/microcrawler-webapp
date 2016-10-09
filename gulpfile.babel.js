@@ -1,6 +1,7 @@
 import gulp from 'gulp';
 import babel from 'gulp-babel';
 import eslint from 'gulp-eslint';
+import install from 'gulp-install';
 import mocha from 'gulp-mocha';
 import flow from 'gulp-flowtype';
 import gutil from 'gulp-util';
@@ -29,6 +30,11 @@ const path = {
   dest: 'client/lib'
 };
 
+gulp.task('install', () => {
+  gulp.src('./package.json')
+    .pipe(install());
+});
+
 gulp.task('default', ['build']);
 
 gulp.task('copy', ['copy-images', 'copy-styles']);
@@ -56,7 +62,7 @@ gulp.task('babel', ['copy'], () => {
     .pipe(gulp.dest(path.lib));
 });
 
-gulp.task('build', ['babel', 'lint', 'typecheck', 'webpack', 'test']);
+gulp.task('build', ['install', 'babel', 'lint', 'typecheck', 'webpack', 'test']);
 
 gulp.task('lint', () => {
   // ESLint ignores files with "node_modules" paths.
