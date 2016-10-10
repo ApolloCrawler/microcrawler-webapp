@@ -1,3 +1,4 @@
+// import Immutable from 'immutable';
 import R from 'ramda';
 
 import {generateReduxSymbol} from '../helpers/redux';
@@ -7,11 +8,27 @@ const WORKERS_REMOVE = generateReduxSymbol('workers/WORKERS_REMOVE');
 const WORKERS_SET = generateReduxSymbol('workers/WORKERS_SET');
 const WORKERS_UPDATE = generateReduxSymbol('workers/WORKERS_UPDATE');
 
+/**
+ * Converts state to immutable version if needed
+ * @param state State to by possibly converted
+ * @returns {*}
+ */
+// function convertState(state) {
+//   if (state instanceof Immutable.Map) {
+//     return state;
+//   }
+//
+//   return Immutable.fromJS(state);
+// }
+
 const initialState = {
+  ts: new Date(),
   workers: []
 };
 
-export default function reducer(state = initialState, action = {}) {
+export default function reducer(oldState = initialState, action = {}) {
+  const state = oldState; // convertState(oldState);
+
   switch (action.type) {
     case WORKERS_ADD:
       return {
@@ -42,6 +59,7 @@ export default function reducer(state = initialState, action = {}) {
 
       return {
         ...state,
+        ts: new Date(),
         workers
       };
     }

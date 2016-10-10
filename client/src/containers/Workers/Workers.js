@@ -7,7 +7,7 @@ import * as workerActions from '../../redux/modules/workers';
 
 @connect(
   (state) => ({
-    workers: state.workers.workers
+    workers: state.workers
   }),
   {
     ...workerActions
@@ -15,11 +15,11 @@ import * as workerActions from '../../redux/modules/workers';
 )
 export default class Workers extends Component {
   static propTypes = {
-    workers: PropTypes.array
+    workers: PropTypes.object
   };
 
   render() {
-    const workers = this.props.workers || [];
+    const workers = (this.props.workers && this.props.workers.workers) || [];
 
     return (
       <div className="container">
@@ -44,7 +44,7 @@ export default class Workers extends Component {
                   <td>{worker.ping && worker.ping.os.platform}</td>
                   <td>{worker.ping && worker.ping.os.hostname}</td>
                   <td>{worker.ping && worker.ping.os.uptime}</td>
-                  <td>{worker.ping && worker.ping.os.load.join(', ')}</td>
+                  <td>{worker.ping && worker.ping.os.load.map(x => { return x.toFixed(2); }).join(', ')}</td>
                 </tr>
               );
             })}
