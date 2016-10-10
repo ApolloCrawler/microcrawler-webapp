@@ -1,6 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 import {Table} from 'react-bootstrap';
 
+import Helmet from 'react-helmet';
+
 import {connect} from 'react-redux';
 import math from 'mathjs';
 import moment from 'moment';
@@ -43,6 +45,8 @@ export default class Workers extends Component {
 
     return (
       <div className="container">
+        <Helmet title="Workers" />
+
         <h1>Workers</h1>
 
         <Table striped bordered condensed hover>

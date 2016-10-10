@@ -1,4 +1,7 @@
 import React, { Component, PropTypes } from 'react';
+
+import Helmet from 'react-helmet';
+
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
@@ -60,6 +63,8 @@ export default class App extends Component {
 
     return (
       <div className={styles.app}>
+        <Helmet title="Main" titleTemplate="Microcrawler | %s"/>
+
         <Navbar fixedTop>
           <Navbar.Header>
             <Navbar.Brand>
