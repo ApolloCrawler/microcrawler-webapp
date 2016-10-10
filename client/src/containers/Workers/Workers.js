@@ -52,6 +52,7 @@ export default class Workers extends Component {
               <th>Platform</th>
               <th>Hostname</th>
               <th>Booted</th>
+              <th>CPU</th>
               <th>Load</th>
               <th>Memory</th>
             </tr>
@@ -65,6 +66,7 @@ export default class Workers extends Component {
                   <td>{worker.ping && worker.ping.os.platform}</td>
                   <td>{worker.ping && worker.ping.os.hostname}</td>
                   <td>{worker.ping && moment.utc(new Date(new Date().getTime() - (worker.ping.os.uptime * 1000))).fromNow()}</td>
+                  <td>{worker.ping && worker.ping.os.cpus.length} x {worker.ping && worker.ping.os.cpus[0].model}</td>
                   <td>{worker.ping && worker.ping.os.load.map(x => { return x.toFixed(2); }).join(', ')}</td>
                   <td>{worker.ping && convertSize(worker.ping.os.mem.free)} / {worker.ping && convertSize(worker.ping.os.mem.total)}</td>
                 </tr>

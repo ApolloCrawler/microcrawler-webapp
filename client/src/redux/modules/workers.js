@@ -60,7 +60,7 @@ export default function reducer(oldState = initialState, action = {}) {
       return {
         ...state,
         ts: new Date(),
-        workers
+        workers: JSON.parse(JSON.stringify(workers))
       };
     }
 
