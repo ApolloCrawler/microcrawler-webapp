@@ -24,6 +24,46 @@ export function convertSize(sizeB) {
   return `${math.round(res, 2)} ${units[i]}`;
 }
 
+export function getWorkerPlatform(worker) {
+  return worker.os && worker.os.platform;
+}
+
+export function getWorkerHostname(worker) {
+  return worker.os && worker.os.hostname;
+}
+
+export function getWorkerUptime(worker) {
+  return worker.os && worker.os.uptime && moment.utc(new Date(new Date().getTime() - (worker.os.uptime * 1000))).fromNow();
+}
+
+export function getWorkerCpus(worker) {
+  if (worker.os && worker.os.cpus) {
+    return `${worker.os.cpus.length} x ${worker.os.cpus[0].model}`;
+  }
+
+  return null;
+}
+
+export function getWorkerLoad(worker) {
+  if (worker.os && worker.os.load) {
+    return worker.os.load.map(x => { return x.toFixed(2); }).join(', ');
+  }
+
+  return null;
+}
+
+export function getWorkerMemory(worker) {
+  if (worker.os && worker.os.mem) {
+    const free = convertSize(worker.os.mem.free);
+    const total = convertSize(worker.os.mem.total);
+    const percentage = math.round((worker.os.mem.free / worker.os.mem.total) * 100, 1);
+
+    return `${percentage}% - ${free} / ${total}`;
+  }
+
+  return null;
+}
+
 export default class WorkersTable extends Component {
   static propTypes = {
     workers: PropTypes.object
@@ -31,46 +71,6 @@ export default class WorkersTable extends Component {
 
   render() {
     const workers = (this.props.workers && this.props.workers.workers) || [];
-
-    const getWorkerPlatform = (worker) => {
-      return worker.os && worker.os.platform;
-    };
-
-    const getWorkerHostname = (worker) => {
-      return worker.os && worker.os.hostname;
-    };
-
-    const getWorkerUptime = (worker) => {
-      return worker.os && worker.os.uptime && moment.utc(new Date(new Date().getTime() - (worker.os.uptime * 1000))).fromNow();
-    };
-
-    const getWorkerCpus = (worker) => {
-      if (worker.os && worker.os.cpus) {
-        return `${worker.os.cpus.length} x ${worker.os.cpus[0].model}`;
-      }
-
-      return null;
-    };
-
-    const getWorkerLoad = (worker) => {
-      if (worker.os && worker.os.load) {
-        return worker.os.load.map(x => { return x.toFixed(2); }).join(', ');
-      }
-
-      return null;
-    };
-
-    const getWorkerMemory = (worker) => {
-      if (worker.os && worker.os.mem) {
-        const free = convertSize(worker.os.mem.free);
-        const total = convertSize(worker.os.mem.total);
-        const percentage = math.round((worker.os.mem.free / worker.os.mem.total) * 100, 1);
-
-        return `${percentage}% - ${free} / ${total}`;
-      }
-
-      return null;
-    };
 
     return (
       <div className="container">
