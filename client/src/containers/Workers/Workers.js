@@ -33,6 +33,7 @@ export default class Workers extends Component {
               <th>Hostname</th>
               <th>Uptime</th>
               <th>Load</th>
+              <th>Memory</th>
             </tr>
           </thead>
 
@@ -45,6 +46,7 @@ export default class Workers extends Component {
                   <td>{worker.ping && worker.ping.os.hostname}</td>
                   <td>{worker.ping && worker.ping.os.uptime}</td>
                   <td>{worker.ping && worker.ping.os.load.map(x => { return x.toFixed(2); }).join(', ')}</td>
+                  <td>{worker.ping && worker.ping.os.mem.free} / {worker.ping && worker.ping.os.mem.total}</td>
                 </tr>
               );
             })}
