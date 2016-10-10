@@ -31,11 +31,11 @@ export default class WorkersTable extends Component {
     const workers = (this.props.workers && this.props.workers.workers) || [];
 
     const getWorkerPlatform = (worker) => {
-      return worker.ping && worker.ping.os.platform;
+      return worker.join && worker.join.os.platform;
     };
 
     const getWorkerHostname = (worker) => {
-      return worker.ping && worker.ping.os.hostname;
+      return worker.join && worker.join.os.hostname;
     };
 
     const getWorkerUptime = (worker) => {
@@ -43,8 +43,8 @@ export default class WorkersTable extends Component {
     };
 
     const getWorkerCpus = (worker) => {
-      if (worker.ping) {
-        return `${worker.ping.os.cpus.length} x ${worker.ping.os.cpus[0].model}`;
+      if (worker.join) {
+        return `${worker.join.os.cpus.length} x ${worker.join.os.cpus[0].model}`;
       }
 
       return null;
