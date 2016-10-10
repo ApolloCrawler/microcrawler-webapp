@@ -77,7 +77,7 @@ export default class Workers extends Component {
         const total = convertSize(worker.ping.os.mem.total);
         const percentage = math.round((worker.ping.os.mem.free / worker.ping.os.mem.total) * 100, 1);
 
-        return `(${percentage}%) - ${free} / ${total}`;
+        return `${percentage}% - ${free} / ${total}`;
       }
 
       return null;
