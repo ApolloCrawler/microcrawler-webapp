@@ -9,7 +9,7 @@ const blacklist = [
   'FILE_DOWNLOAD_SUCCESS'
 ];
 export default createDevTools(
-  <DockMonitor toggleVisibilityKey="ctrl-H" changePositionKey="ctrl-Q" changeMonitorKey="ctrl-m">
+  <DockMonitor toggleVisibilityKey="ctrl-H" changePositionKey="ctrl-Q" changeMonitorKey="ctrl-m" defaultIsVisible={false}>
     <FilterMonitor blacklist={blacklist}>
       <LogMonitor />
     </FilterMonitor>
