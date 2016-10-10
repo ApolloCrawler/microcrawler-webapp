@@ -2,9 +2,28 @@ import React, {Component, PropTypes} from 'react';
 import {Table} from 'react-bootstrap';
 
 import {connect} from 'react-redux';
+import math from 'mathjs';
 import moment from 'moment';
 
 import * as workerActions from '../../redux/modules/workers';
+
+function convertSize(sizeB) {
+  const units = [
+    'B',
+    'kB',
+    'MB',
+    'GB'
+  ];
+
+  let i = 0;
+  let res = sizeB;
+  while (res >= 1024 && (i + 1 < units.length)) {
+    res /= 1024;
+    i += 1;
+  }
+
+  return `${math.round(res, 2)} ${units[i]}`;
+}
 
 @connect(
   (state) => ({
@@ -47,7 +66,7 @@ export default class Workers extends Component {
                   <td>{worker.ping && worker.ping.os.hostname}</td>
                   <td>{worker.ping && moment.utc(new Date(new Date().getTime() - (worker.ping.os.uptime * 1000))).fromNow()}</td>
                   <td>{worker.ping && worker.ping.os.load.map(x => { return x.toFixed(2); }).join(', ')}</td>
-                  <td>{worker.ping && worker.ping.os.mem.free} / {worker.ping && worker.ping.os.mem.total}</td>
+                  <td>{worker.ping && convertSize(worker.ping.os.mem.free)} / {worker.ping && convertSize(worker.ping.os.mem.total)}</td>
                 </tr>
               );
             })}
