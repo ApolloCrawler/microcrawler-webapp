@@ -4,7 +4,9 @@ import {Table} from 'react-bootstrap';
 import math from 'mathjs';
 import moment from 'moment';
 
-function convertSize(sizeB) {
+import merge from 'node.extend';
+
+export function convertSize(sizeB) {
   const units = [
     'B',
     'kB',
@@ -31,38 +33,38 @@ export default class WorkersTable extends Component {
     const workers = (this.props.workers && this.props.workers.workers) || [];
 
     const getWorkerPlatform = (worker) => {
-      return worker.join && worker.join.os.platform;
+      return worker.os && worker.os.platform;
     };
 
     const getWorkerHostname = (worker) => {
-      return worker.join && worker.join.os.hostname;
+      return worker.os && worker.os.hostname;
     };
 
     const getWorkerUptime = (worker) => {
-      return worker.ping && moment.utc(new Date(new Date().getTime() - (worker.ping.os.uptime * 1000))).fromNow();
+      return worker.os && worker.os.uptime && moment.utc(new Date(new Date().getTime() - (worker.os.uptime * 1000))).fromNow();
     };
 
     const getWorkerCpus = (worker) => {
-      if (worker.join) {
-        return `${worker.join.os.cpus.length} x ${worker.join.os.cpus[0].model}`;
+      if (worker.os && worker.os.cpus) {
+        return `${worker.os.cpus.length} x ${worker.os.cpus[0].model}`;
       }
 
       return null;
     };
 
     const getWorkerLoad = (worker) => {
-      if (worker.ping) {
-        return worker.ping.os.load.map(x => { return x.toFixed(2); }).join(', ');
+      if (worker.os && worker.os.load) {
+        return worker.os.load.map(x => { return x.toFixed(2); }).join(', ');
       }
 
       return null;
     };
 
     const getWorkerMemory = (worker) => {
-      if (worker.ping) {
-        const free = convertSize(worker.ping.os.mem.free);
-        const total = convertSize(worker.ping.os.mem.total);
-        const percentage = math.round((worker.ping.os.mem.free / worker.ping.os.mem.total) * 100, 1);
+      if (worker.os && worker.os.mem) {
+        const free = convertSize(worker.os.mem.free);
+        const total = convertSize(worker.os.mem.total);
+        const percentage = math.round((worker.os.mem.free / worker.os.mem.total) * 100, 1);
 
         return `${percentage}% - ${free} / ${total}`;
       }
@@ -87,15 +89,16 @@ export default class WorkersTable extends Component {
 
           <tbody>
             {workers.map((worker) => {
+              const data = merge(true, worker.join || {}, worker.ping || {});
               return (
-                <tr key={worker.join.uuid}>
-                  {false && <td>{worker.join.uuid}</td>}
-                  <td>{getWorkerPlatform(worker)}</td>
-                  <td>{getWorkerHostname(worker)}</td>
-                  <td>{getWorkerUptime(worker)}</td>
-                  <td>{getWorkerCpus(worker)}</td>
-                  <td>{getWorkerLoad(worker)}</td>
-                  <td>{getWorkerMemory(worker)}</td>
+                <tr key={data.uuid}>
+                  {false && <td>{data.uuid}</td>}
+                  <td>{getWorkerPlatform(data)}</td>
+                  <td>{getWorkerHostname(data)}</td>
+                  <td>{getWorkerUptime(data)}</td>
+                  <td>{getWorkerCpus(data)}</td>
+                  <td>{getWorkerLoad(data)}</td>
+                  <td>{getWorkerMemory(data)}</td>
                 </tr>
               );
             })}
