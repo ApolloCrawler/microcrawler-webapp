@@ -35,10 +35,15 @@ export default function reducer(oldState = initialState, action = {}) {
         ...state
       };
 
-    case WORKERS_REMOVE:
+    case WORKERS_REMOVE: {
+      const workers = R.reject((w => (w.join.uuid === action.worker.join.uuid)), state.workers);
+
       return {
-        ...state
+        ...state,
+        ts: new Date(),
+        workers: JSON.parse(JSON.stringify(workers))
       };
+    }
 
     case WORKERS_SET:
       return {

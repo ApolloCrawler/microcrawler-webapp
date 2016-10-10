@@ -43,6 +43,45 @@ export default class Workers extends Component {
   render() {
     const workers = (this.props.workers && this.props.workers.workers) || [];
 
+    const getWorkerPlatform = (worker) => {
+      return worker.ping && worker.ping.os.platform;
+    };
+
+    const getWorkerHostname = (worker) => {
+      return worker.ping && worker.ping.os.hostname;
+    };
+
+    const getWorkerUptime = (worker) => {
+      return worker.ping && moment.utc(new Date(new Date().getTime() - (worker.ping.os.uptime * 1000))).fromNow();
+    };
+
+    const getWorkerCpus = (worker) => {
+      if (worker.ping) {
+        return `${worker.ping.os.cpus.length} x ${worker.ping.os.cpus[0].model}`;
+      }
+
+      return null;
+    };
+
+    const getWorkerLoad = (worker) => {
+      if (worker.ping) {
+        return worker.ping.os.load.map(x => { return x.toFixed(2); }).join(', ');
+      }
+
+      return null;
+    };
+
+    const getWorkerMemory = (worker) => {
+      if (worker.ping) {
+        const free = convertSize(worker.ping.os.mem.free);
+        const total = convertSize(worker.ping.os.mem.total);
+
+        return `${free} / ${total} (${math.round((worker.ping.os.mem.free / worker.ping.os.mem.total) * 100, 1)}%)`;
+      }
+
+      return null;
+    };
+
     return (
       <div className="container">
         <Helmet title="Workers" />
@@ -67,12 +106,12 @@ export default class Workers extends Component {
               return (
                 <tr key={worker.join.uuid}>
                   <td>{worker.join.uuid}</td>
-                  <td>{worker.ping && worker.ping.os.platform}</td>
-                  <td>{worker.ping && worker.ping.os.hostname}</td>
-                  <td>{worker.ping && moment.utc(new Date(new Date().getTime() - (worker.ping.os.uptime * 1000))).fromNow()}</td>
-                  <td>{worker.ping && worker.ping.os.cpus.length} x {worker.ping && worker.ping.os.cpus[0].model}</td>
-                  <td>{worker.ping && worker.ping.os.load.map(x => { return x.toFixed(2); }).join(', ')}</td>
-                  <td>{worker.ping && convertSize(worker.ping.os.mem.free)} / {worker.ping && convertSize(worker.ping.os.mem.total)}</td>
+                  <td>{getWorkerPlatform(worker)}</td>
+                  <td>{getWorkerHostname(worker)}</td>
+                  <td>{getWorkerUptime(worker)}</td>
+                  <td>{getWorkerCpus(worker)}</td>
+                  <td>{getWorkerLoad(worker)}</td>
+                  <td>{getWorkerMemory(worker)}</td>
                 </tr>
               );
             })}
