@@ -53,6 +53,7 @@ export default class Workers extends Component {
           <thead>
             <tr>
               <th>UUID</th>
+              <th>Country</th>
               <th>Platform</th>
               <th>Hostname</th>
               <th>Booted</th>
@@ -67,6 +68,7 @@ export default class Workers extends Component {
               return (
                 <tr key={worker.join.uuid}>
                   <td>{worker.join.uuid}</td>
+                  <td><img src="/images/flags/png/64/CZ.png" alt="Country" style={{maxHeight: '100%'}}/></td>
                   <td>{worker.ping && worker.ping.os.platform}</td>
                   <td>{worker.ping && worker.ping.os.hostname}</td>
                   <td>{worker.ping && moment.utc(new Date(new Date().getTime() - (worker.ping.os.uptime * 1000))).fromNow()}</td>
