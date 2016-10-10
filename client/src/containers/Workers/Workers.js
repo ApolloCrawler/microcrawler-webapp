@@ -91,7 +91,7 @@ export default class Workers extends Component {
         <Table striped bordered condensed hover>
           <thead>
             <tr>
-              <th>UUID</th>
+              {false && <th>UUID</th>}
               <th>Platform</th>
               <th>Hostname</th>
               <th>Booted</th>
@@ -105,7 +105,7 @@ export default class Workers extends Component {
             {workers.map((worker) => {
               return (
                 <tr key={worker.join.uuid}>
-                  <td>{worker.join.uuid}</td>
+                  {false && <td>{worker.join.uuid}</td>}
                   <td>{getWorkerPlatform(worker)}</td>
                   <td>{getWorkerHostname(worker)}</td>
                   <td>{getWorkerUptime(worker)}</td>
