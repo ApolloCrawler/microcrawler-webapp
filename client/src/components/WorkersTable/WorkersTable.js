@@ -79,6 +79,7 @@ export default class WorkersTable extends Component {
             <tr>
               {false && <th>UUID</th>}
               <th>Platform</th>
+              <th>IP</th>
               <th>Hostname</th>
               <th>Booted</th>
               <th>CPU</th>
@@ -94,6 +95,7 @@ export default class WorkersTable extends Component {
                 <tr key={data.uuid}>
                   {false && <td>{data.uuid}</td>}
                   <td>{getWorkerPlatform(data)}</td>
+                  <td>{data.remote_ip}</td>
                   <td>{getWorkerHostname(data)}</td>
                   <td>{getWorkerUptime(data)}</td>
                   <td>{getWorkerCpus(data)}</td>
