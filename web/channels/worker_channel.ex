@@ -15,7 +15,12 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     Logger.debug Poison.encode_to_iodata!(worker_info, pretty: true)
     Logger.debug inspect(self)
 
-    ActiveWorkers.update_joined_worker_info(%{join: worker_info})
+    remote_ip = socket.assigns[:conn].remote_ip
+                |> Tuple.to_list
+                |> Enum.join(".")
+    ActiveWorkers.update_joined_worker_info(%{
+      join: Map.put(worker_info, :remote_ip, remote_ip)
+    })
     socket = assign(socket, :worker_info, worker_info)
 
     {:ok, conn} = AMQP.Connection.open
