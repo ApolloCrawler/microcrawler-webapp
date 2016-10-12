@@ -14,6 +14,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     Logger.debug "Received join - worker:lobby"
     Logger.debug Poison.encode_to_iodata!(worker_info, pretty: true)
     Logger.debug inspect(self)
+    Logger.debug inspect(socket.assigns[:conn].remote_ip)
 
     ActiveWorkers.update_joined_worker_info(%{join: worker_info})
     socket = assign(socket, :worker_info, worker_info)
