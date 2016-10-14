@@ -64,6 +64,20 @@ export function getWorkerMemory(worker) {
   return null;
 }
 
+export function getWorkerFlag(worker) {
+  const countryCode = worker.country_code;
+
+  if (countryCode === null || countryCode === '' || countryCode === 'ZZ') {
+    return null;
+  }
+
+  const path = `/images/flags/png/32/${countryCode}.png`;
+
+  return (
+    <img src={path} alt={countryCode} />
+  );
+}
+
 export default class WorkersTable extends Component {
   static propTypes = {
     workers: PropTypes.object
@@ -97,7 +111,7 @@ export default class WorkersTable extends Component {
                   {false && <td>{data.uuid}</td>}
                   <td>{getWorkerPlatform(data)}</td>
                   <td>{data.remote_ip}</td>
-                  <td>{data.country_code}</td>
+                  <td>{getWorkerFlag(worker)}</td>
                   <td>{getWorkerHostname(data)}</td>
                   <td>{getWorkerUptime(data)}</td>
                   <td>{getWorkerCpus(data)}</td>
