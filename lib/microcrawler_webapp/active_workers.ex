@@ -36,7 +36,7 @@ defmodule MicrocrawlerWebapp.ActiveWorkers do
         Process.monitor(pid)
         new_info
     end
-    ClientChannel.update_worker(info)
+    ClientChannel.update_worker(add_uuid(new_info, info))
     {:noreply, Map.put(state, pid, info)}
   end
 
@@ -44,5 +44,14 @@ defmodule MicrocrawlerWebapp.ActiveWorkers do
     Logger.debug inspect(reason)
     ClientChannel.remove_worker(Map.fetch!(state, pid))
     {:noreply, Map.delete(state, pid)}
+  end
+
+  defp add_uuid(new_info, info) do
+    case Map.has_key?(new_info, :join) do
+      true ->
+        new_info
+      false ->
+        Map.merge(new_info, %{join: %{uuid: info.join["uuid"]}})
+    end
   end
 end
