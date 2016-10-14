@@ -67,7 +67,7 @@ export function getWorkerMemory(worker) {
 export function getWorkerFlag(worker) {
   const countryCode = worker.country_code;
 
-  if (countryCode === null || countryCode === '' || countryCode === 'ZZ') {
+  if (!countryCode || countryCode === null || countryCode === '' || countryCode === 'ZZ') {
     return null;
   }
 
