@@ -1,4 +1,5 @@
 // import Immutable from 'immutable';
+import merge from 'node.extend';
 import R from 'ramda';
 
 import {generateReduxSymbol} from '../helpers/redux';
@@ -64,8 +65,8 @@ export default function reducer(oldState = initialState, action = {}) {
 
       const workers = state.workers;
       if (worker) {
-        worker.join = action.worker.join;
-        worker.ping = action.worker.ping;
+        worker.join = merge(true, worker.join || {}, action.worker.join || {});
+        worker.ping = merge(true, worker.ping || {}, action.worker.ping || {});
       } else {
         workers.push(action.worker);
       }
