@@ -15,13 +15,8 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     Logger.debug Poison.encode_to_iodata!(worker_info, pretty: true)
     Logger.debug inspect(self)
 
-    remote_ip = socket.assigns[:conn].remote_ip
-    ActiveWorkers.update_joined_worker_info(%{
-      join: worker_info
-            |> Map.put(:remote_ip, remote_ip |> Tuple.to_list |> Enum.join("."))
-            |> Map.put(:country_code, country_code(remote_ip))
-    })
-    socket = assign(socket, :worker_info, worker_info)
+    socket = save_worker_info(socket, worker_info)
+    send(self, :after_join)
 
     {:ok, conn} = AMQP.Connection.open
     {:ok, chan} = AMQP.Channel.open(conn)
@@ -40,6 +35,25 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
 
   def join("worker:" <> _private_room_id, _params, _socket) do
     {:error, %{reason: "unauthorized"}}
+  end
+
+  def handle_info(:after_join, socket) do
+    socket
+    |> send_worker_info
+    |> noreply
+  end
+
+  def handle_info({:basic_deliver, payload, meta}, socket) do
+    Logger.debug "Received from rabbit - #{payload}"
+    push socket, "crawl", %{payload: payload}
+    {:noreply, assign(socket, :rabb_meta, meta)}
+  end
+
+  def handle_info(msg, socket) do
+    Logger.debug inspect(msg)
+    Logger.debug inspect(self)
+    # IO.inspect socket
+    {:noreply, socket}
   end
 
   def handle_in("ping", payload, socket) do
@@ -67,25 +81,13 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     {:noreply, socket}
   end
 
-  def handle_info({:basic_deliver, payload, meta}, socket) do
-    Logger.debug "Received from rabbit - #{payload}"
-    push socket, "crawl", %{payload: payload}
-    {:noreply, assign(socket, :rabb_meta, meta)}
-  end
-
-  def handle_info(msg, socket) do
-    Logger.debug inspect(msg)
-    Logger.debug inspect(self)
-    # IO.inspect socket
-    {:noreply, socket}
-  end
-
   intercept ["send_worker_info"]
 
   def handle_out("send_worker_info", _msg, socket) do
     Logger.debug "Received out event - send_worker_info"
-    ActiveWorkers.update_joined_worker_info(socket.assigns[:worker_info])
-    {:noreply, socket}
+    socket
+    |> send_worker_info
+    |> noreply
   end
 
   def terminate(reason, socket) do
@@ -96,10 +98,34 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     :ok
   end
 
+  defp save_worker_info(socket, worker_info) do
+    remote_ip = socket.assigns[:conn].remote_ip
+    assign(socket, :worker_info, %{join: worker_info(worker_info, remote_ip)})
+  end
+
+  defp send_worker_info(socket) do
+    ActiveWorkers.update_joined_worker_info(socket.assigns[:worker_info])
+    socket
+  end
+
+  defp worker_info(worker_info, remote_ip) do
+    worker_info
+    |> Map.put(:remote_ip, remote_ip(remote_ip))
+    |> Map.put(:country_code, country_code(remote_ip))
+  end
+
+  defp remote_ip(ip) do
+    ip
+    |> Tuple.to_list
+    |> Enum.join(".")
+  end
+
   defp country_code(ip) do
     case MicrocrawlerWebapp.IpInfo.for(ip) do
       {:ok, info} -> elem(info, 0)
       :error      -> ""
     end
   end
+
+  defp noreply(socket), do: {:noreply, socket}
 end
