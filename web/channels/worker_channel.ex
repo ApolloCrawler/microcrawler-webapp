@@ -16,10 +16,10 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     Logger.debug inspect(self)
 
     remote_ip = socket.assigns[:conn].remote_ip
-                |> Tuple.to_list
-                |> Enum.join(".")
     ActiveWorkers.update_joined_worker_info(%{
-      join: Map.put(worker_info, :remote_ip, remote_ip)
+      join: worker_info
+            |> Map.put(:remote_ip, remote_ip |> Tuple.to_list |> Enum.join("."))
+            |> Map.put(:country_code, country_code(remote_ip))
     })
     socket = assign(socket, :worker_info, worker_info)
 
@@ -94,5 +94,12 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     Logger.debug inspect(socket)
     AMQP.Connection.close(socket.assigns[:rabb_conn])
     :ok
+  end
+
+  defp country_code(ip) do
+    case MicrocrawlerWebapp.IpInfo.for(ip) do
+      {:ok, info} -> elem(info, 0)
+      :error      -> ""
+    end
   end
 end
