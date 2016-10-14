@@ -4,6 +4,7 @@ import R from 'ramda';
 import {generateReduxSymbol} from '../helpers/redux';
 
 const WORKERS_ADD = generateReduxSymbol('workers/WORKERS_ADD');
+const WORKERS_CLEAN = generateReduxSymbol('workers/WORKERS_CLEAN');
 const WORKERS_REMOVE = generateReduxSymbol('workers/WORKERS_REMOVE');
 const WORKERS_SET = generateReduxSymbol('workers/WORKERS_SET');
 const WORKERS_UPDATE = generateReduxSymbol('workers/WORKERS_UPDATE');
@@ -33,6 +34,13 @@ export default function reducer(oldState = initialState, action = {}) {
     case WORKERS_ADD:
       return {
         ...state
+      };
+
+    case WORKERS_CLEAN:
+      return {
+        ...state,
+        ts: new Date(),
+        workers: []
       };
 
     case WORKERS_REMOVE: {
@@ -78,6 +86,12 @@ export function workersAdd(worker) {
   return {
     type: WORKERS_ADD,
     worker
+  };
+}
+
+export function workersClean() {
+  return {
+    type: WORKERS_CLEAN
   };
 }
 
