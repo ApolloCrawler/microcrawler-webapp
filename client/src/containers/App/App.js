@@ -33,6 +33,7 @@ export default class App extends Component {
     children: PropTypes.object.isRequired,
 
     // workersAdd: PropTypes.func,
+    workersClean: PropTypes.func,
     workersRemove: PropTypes.func,
     // workersSet: PropTypes.func,
     workersUpdate: PropTypes.func,
@@ -53,14 +54,18 @@ export default class App extends Component {
         logger.error('Connection error');
       });
 
-    // TODO: Rename to worker_update
-    channel.on('update_worker', (payload) => {
-      this.props.workersUpdate(payload);
+    channel.on('clear_worker_list', () => {
+      this.props.workersClean();
     });
 
     // TODO: Rename to worker_remove
     channel.on('remove_worker', (payload) => {
       this.props.workersRemove(payload);
+    });
+
+    // TODO: Rename to worker_update
+    channel.on('update_worker', (payload) => {
+      this.props.workersUpdate(payload);
     });
   }
 

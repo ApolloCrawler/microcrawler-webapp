@@ -33,6 +33,7 @@ defmodule MicrocrawlerWebapp.ClientChannel do
   end
 
   def handle_info(:send_joined_workers, socket) do
+    push socket, "clear_worker_list", %{}
     Enum.each(ActiveWorkers.joined_workers, fn(worker) ->
       push socket, "update_worker", worker
     end)
