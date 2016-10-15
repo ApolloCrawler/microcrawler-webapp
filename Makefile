@@ -36,10 +36,10 @@ clean-release:
 deps: deps-debug deps-release
 
 deps-debug: build-debug
-		${LINKER_TOOL} ./native/target/debug/libgauc.a
+		${LINKER_TOOL} ./native/target/debug/libgauc.dylib
 
 deps-release: build-release
-		${LINKER_TOOL} ./native/target/release/libgauc.a
+		${LINKER_TOOL} ./native/target/release/libgauc.dylib
 
 dot:
 		cargo graph \
@@ -66,10 +66,10 @@ rebuild-debug: clean-debug build-debug
 rebuild-release: clean-release build-release
 
 size-debug:
-		ls -lah ./native/target/debug/libgauc.a
+		ls -lah ./native/target/debug/libgauc.dylib
 
 size-release:
-		ls -lah ./native/target/release/libgauc.a
+		ls -lah ./native/target/release/libgauc.dylib
 
 size: size-debug size-release
 
@@ -77,7 +77,7 @@ stats:
 		cargo count --separator , --unsafe-statistics
 
 strip:
-		strip ./native/target/release/libgauc.a
+		strip ./native/target/release/libgauc.dylib
 
 test:
 		cargo test
@@ -85,8 +85,8 @@ test:
 update:
 		cargo multi update
 
-upx: ./target/release/gooddata-fs
-		upx -fq --ultra-brute --best -o ./bin/gooddata-fs ./target/release/gooddata-fs
+# upx: ./target/release/gooddata-fs
+#		upx -fq --ultra-brute --best -o ./bin/gooddata-fs ./target/release/gooddata-fs
 
 watch:
 		cargo watch

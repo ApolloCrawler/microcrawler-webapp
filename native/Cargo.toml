@@ -5,7 +5,7 @@ authors = ["Tomas Korcak <korczis@gmail.com>"]
 
 [lib]
 name = "gauc"
-crate-type = ["staticlib"]
+crate-type = ["dylib"]
 
 [dependencies]
-ruster_unsafe = { git = "https://github.com/korczis/ruster_unsafe.git" }
+erlang_nif-sys = "*"
