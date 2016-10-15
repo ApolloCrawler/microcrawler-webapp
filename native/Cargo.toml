@@ -1,0 +1,11 @@
+[package]
+name = "gauc"
+version = "0.0.1"
+authors = ["Tomas Korcak <korczis@gmail.com>"]
+
+[lib]
+name = "gauc"
+crate-type = ["staticlib"]
+
+[dependencies]
+ruster_unsafe = { git = "https://github.com/korczis/ruster_unsafe.git" }
