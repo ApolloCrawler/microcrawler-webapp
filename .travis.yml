@@ -37,7 +37,7 @@ before_script:
 
 install:
   - ./.travis/install.sh
-  - curl https://sh.rustup.rs -sSf | sh
+  - curl https://sh.rustup.rs -sSf | bash -s -- -y
   - rustup install $TRAVIS_RUST_VERSION
   - rustup default $TRAVIS_RUST_VERSION
   - make
