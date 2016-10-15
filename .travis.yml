@@ -38,8 +38,9 @@ before_script:
 install:
   - ./.travis/install.sh
   - curl https://sh.rustup.rs -sSf | bash -s -- -y
-  - ~/.cargo/bin/rustup install $TRAVIS_RUST_VERSION
-  - ~/.cargo/bin/rustup default $TRAVIS_RUST_VERSION
+  - source $HOME/.cargo/env
+  - rustup install $TRAVIS_RUST_VERSION
+  - rustup default $TRAVIS_RUST_VERSION
   - make
   - mix local.rebar --force # for Elixir 1.3.0 and up
   - mix local.hex --force
