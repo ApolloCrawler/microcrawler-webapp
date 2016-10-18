@@ -20,10 +20,10 @@ install_deps:
 build: build-debug build-release
 
 build-debug:
-		cd native && cargo build
+		cd native/gauc && cargo rustc -- --codegen link-args='-flat_namespace -undefined suppress'
 
 build-release:
-		cd native && cargo build --release
+		cd native/gauc && cargo rustc -- --codegen link-args='-flat_namespace -undefined suppress'
 
 clean: clean-debug clean-release
 
