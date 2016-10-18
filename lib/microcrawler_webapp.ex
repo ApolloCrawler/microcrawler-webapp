@@ -30,3 +30,19 @@ defmodule MicrocrawlerWebapp do
     :ok
   end
 end
+
+defmodule Gauc do
+    require Rustler
+
+    @on_load :load_nif
+    def load_nif do
+        path = :filelib.wildcard('native/gauc/target/debug/libgauc.*') |> hd |> :filename.rootname
+        case :erlang.load_nif(path, 0) do
+            :ok -> IO.puts "Rustler Loaded"
+            err -> IO.puts "Shit happened"
+        end
+    end
+
+    # When your NIF is loaded, it will override this function.
+    def add(_a, _b), do: throw :nif_not_loaded
+end
