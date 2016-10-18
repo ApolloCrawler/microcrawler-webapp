@@ -7,7 +7,6 @@ rustler_export_nifs!(
 );
 
 fn add<'a>(env: &'a NifEnv, args: &Vec<NifTerm>) -> NifResult<NifTerm<'a>> {
-    println!("Wow, I am in Rust world!");
     let num1: i64 = try!(args[0].decode());
     let num2: i64 = try!(args[1].decode());
     Ok((num1 + num2).encode(env))
