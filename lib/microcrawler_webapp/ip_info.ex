@@ -1,13 +1,17 @@
 defmodule MicrocrawlerWebapp.IpInfoLoader do
   use Bitwise
+  require Logger
 
   def get_ip_infos(dir) do
     {:ok, files} = File.ls Path.join dir
-    files
+    IO.puts "Loading #{length files} IP files"
+    res = files
     |> Enum.map(&Path.join(dir ++ [&1]))
     |> Enum.reduce([], &process_file/2)
     |> Enum.sort
     |> List.to_tuple
+    IO.puts "IP files loaded"
+    res
   end
 
   def ip_to_int(ip) when is_tuple(ip) do
@@ -29,6 +33,7 @@ defmodule MicrocrawlerWebapp.IpInfoLoader do
   end
 
   defp process_file(filename, lines) do
+    IO.puts "Loading #{filename}"
     File.stream!(filename, [:read])
     |> Enum.reduce(lines, &process_line/2)
   end
@@ -58,7 +63,7 @@ defmodule MicrocrawlerWebapp.IpInfoLoader do
   defp parse_line([_, _, "asn" | _]), do: :error
 
   defp parse_line(line) do
-    IO.puts ~s(UNKNOWN: #{Enum.join(line, "|")})
+    Logger.debug ~s(UNKNOWN: #{Enum.join(line, "|")})
     :error
   end
 end

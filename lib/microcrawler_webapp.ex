@@ -32,14 +32,15 @@ defmodule MicrocrawlerWebapp do
 end
 
 defmodule Gauc do
+    require Logger
     require Rustler
 
     @on_load :load_nif
     def load_nif do
         path = :filelib.wildcard('native/gauc/target/debug/libgauc.*') |> hd |> :filename.rootname
         case :erlang.load_nif(path, 0) do
-            :ok -> IO.puts "Rustler Loaded"
-            err -> IO.puts "Shit happened"
+            :ok -> Logger.debug "Rustler Loaded"
+            {:error, reason} -> IO.inspect(reason)
         end
     end
 
