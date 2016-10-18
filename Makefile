@@ -4,9 +4,13 @@ OS := $(shell uname)
 ifeq ($(OS),Darwin)
 	# Mac specific
 	LINKER_TOOL = otool -L
+	CARGO_BUILD_DEBUG   = cargo rustc -- --codegen link-args='-flat_namespace -undefined suppress'
+	CARGO_BUILD_RELEASE = cargo rustc -- --codegen link-args='-flat_namespace -undefined suppress'
 else
 	# Linux specific
 	LINKER_TOOL = ldd
+	CARGO_BUILD_DEBUG   = cargo build
+	CARGO_BUILD_RELEASE = cargo build --release
 endif
 
 all: build
@@ -20,10 +24,10 @@ install_deps:
 build: build-debug build-release
 
 build-debug:
-		cd native/gauc && cargo rustc -- --codegen link-args='-flat_namespace -undefined suppress'
+		cd native/gauc && ${CARGO_BUILD_DEBUG}
 
 build-release:
-		cd native/gauc && cargo rustc -- --codegen link-args='-flat_namespace -undefined suppress'
+		cd native/gauc && ${CARGO_BUILD_RELEASE}
 
 clean: clean-debug clean-release
 
