@@ -1,4 +1,5 @@
 #![feature(link_args)]
+#[cfg(any(target_os = "mac"))]
 #[link_args = "-flat_namespace -undefined suppress"]
 extern {}
 
