@@ -44,8 +44,10 @@ defmodule MicrocrawlerWebapp.Mixfile do
   defp deps do
     [
       # {:couchie, git: "https://github.com/nirvana/couchie.git"},
+      {:comeonin, "~> 2.3"},
       {:dialyxir, "~> 0.3.5", only: [:dev]},
       {:graphql, "~> 0.3"},
+      {:guardian, "~> 0.13.0"},
       {:phoenix, "~> 1.2.1", override: true},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.0"},

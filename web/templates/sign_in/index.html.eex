@@ -1,0 +1,12 @@
+<div class="jumbotron">
+  <h1>Sign In</h1>
+  <%= form_for @conn, sign_in_path(@conn, :sign_in), [as: :creds], fn f -> %>
+    <div class="form-group">
+      <%= text_input f, :email, placeholder: "enter email", class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= password_input f, :password, placeholder: "enter password", class: "form-control" %>
+    </div>
+    <%= submit "Sign In", class: "btn btn-primary" %>
+  <%= end %>
+</div>
