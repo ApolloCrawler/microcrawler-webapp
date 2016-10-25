@@ -92,6 +92,9 @@ export default class App extends Component {
               <LinkContainer to="/">
                 <NavItem>Workers</NavItem>
               </LinkContainer>
+              <NavItem title="Sign Up" href="/signup">Sign Up</NavItem>
+              <NavItem title="Sign In" href="/signin">Sign In</NavItem>
+              <NavItem title="Account" href="/account">Account</NavItem>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

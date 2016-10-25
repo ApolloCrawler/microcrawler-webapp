@@ -8,7 +8,25 @@
     <meta name="author" content="">
 
     <title>Hello MicrocrawlerWebapp!</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <!-- Default Phoenix style -->
+    <!-- link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>" -->
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap-theme.min.css">
+
+    <style>
+    /* Space out content a bit */
+    body, form, ul, table {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    /* Phoenix flash messages */
+    .alert:empty { display: none; }
+    </style>
   </head>
 
   <body>
