@@ -32,10 +32,10 @@ build-release:
 clean: clean-debug clean-release
 
 clean-debug:
-		cargo clean
+		cd native/gauc && cargo clean
 
 clean-release:
-		cargo clean --release
+		cd native/gauc && cargo clean --release
 
 deps: deps-debug deps-release
 
