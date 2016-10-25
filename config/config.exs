@@ -5,6 +5,14 @@
 # is restricted to this project.
 use Mix.Config
 
+config :guardian, Guardian,
+  issuer: "MicrocrawlerWebapp",
+  hooks: MicrocrawlerWebapp.GuardianSerializer,
+  ttl: {5, :minutes},
+  verify_issuer: true,
+  secret_key: "not so secret key",
+  serializer: MicrocrawlerWebapp.GuardianSerializer
+
 # General application configuration
 config :microcrawler_webapp,
   ecto_repos: [MicrocrawlerWebapp.Repo]
