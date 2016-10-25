@@ -1,5 +1,5 @@
 <div class="jumbotron">
-  <h1>Sign Up</h1>
+  <h1 class="text-center">Sign Up</h1>
   <%= form_for @changeset, sign_up_path(@conn, :sign_up), fn f -> %>
     <div class="form-group">
       <%= text_input f, :email, placeholder: "enter email", class: "form-control" %>
