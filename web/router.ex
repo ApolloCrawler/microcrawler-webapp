@@ -21,16 +21,15 @@ defmodule MicrocrawlerWebapp.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    plug Guardian.Plug.LoadResource
   end
 
   pipeline :graphql do
     plug :accepts, ["json"]
-  end
-
-  scope "/", MicrocrawlerWebapp do
-    pipe_through :browser # Use the default browser stack
-
-    get "/", PageController, :index
+    plug Guardian.Plug.VerifyHeader
+    # plug Guardian.Plug.VerifySession
+    plug Guardian.Plug.LoadResource
   end
 
   scope "/account", MicrocrawlerWebapp do
@@ -40,14 +39,14 @@ defmodule MicrocrawlerWebapp.Router do
     post "/", AccountController, :renew
   end
 
-  scope "/signin", MicrocrawlerWebapp do
+  scope "/signin_old", MicrocrawlerWebapp do
     pipe_through [:browser, :static_layout]
 
     get "/", SignInController, :index
     post "/", SignInController, :sign_in
   end
 
-  scope "/signup", MicrocrawlerWebapp do
+  scope "/signup_old", MicrocrawlerWebapp do
     pipe_through [:browser, :static_layout]
 
     get "/", SignUpController, :index
@@ -58,7 +57,11 @@ defmodule MicrocrawlerWebapp.Router do
   scope "/api/v1", as: :api_v1, alias: MicrocrawlerWebapp.API.V1 do
     pipe_through :api
 
-    get "/test", ApiController, :index
+    # Testing route
+    post "/auth/signin", AuthController, :sign_in
+    post "/auth/signout", AuthController, :sign_out
+    post "/auth/signup", AuthController, :sign_up
+    get  "/auth/user", AuthController, :user
   end
 
   scope "/graphql", MicrocrawlerWebapp do
@@ -66,4 +69,11 @@ defmodule MicrocrawlerWebapp.Router do
 
     get "/", GraphqlController, :index
   end
+
+  scope "/", MicrocrawlerWebapp do
+      pipe_through :browser # Use the default browser stack
+
+      # get "/", PageController, :index
+      get "/*path", PageController, :index
+    end
 end

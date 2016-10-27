@@ -17,20 +17,27 @@ import { Socket } from 'phoenix';
 import config from '../../config';
 import logger from '../../helpers/logger';
 
+import * as authActions from '../../redux/modules/auth';
 import * as workerActions from '../../redux/modules/workers';
 
 @connect(
   state => ({
-    user: state.user
+    user: state.auth.user
   }),
   {
     pushState: push,
+    ...authActions,
     ...workerActions
   }
 )
 export default class App extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
+
+    user: PropTypes.object,
+
+    pushState: PropTypes.func.isRequired,
+    signOut: PropTypes.func,
 
     // workersAdd: PropTypes.func,
     workersClean: PropTypes.func,
@@ -89,12 +96,43 @@ export default class App extends Component {
 
           <Navbar.Collapse>
             <Nav navbar>
-              <LinkContainer to="/">
+              <LinkContainer to="clients">
+                <NavItem>Clients</NavItem>
+              </LinkContainer>
+
+              <LinkContainer to="workers">
                 <NavItem>Workers</NavItem>
               </LinkContainer>
-              <NavItem title="Sign Up" href="/signup">Sign Up</NavItem>
-              <NavItem title="Sign In" href="/signin">Sign In</NavItem>
-              <NavItem title="Account" href="/account">Account</NavItem>
+            </Nav>
+
+            <Nav navbar pullRight>
+              {!this.props.user &&
+                <LinkContainer to="signin">
+                  <NavItem>Sign In</NavItem>
+                </LinkContainer>
+              }
+
+              {!this.props.user &&
+                <LinkContainer to="signup">
+                  <NavItem>Sign Up</NavItem>
+                </LinkContainer>
+              }
+
+              {this.props.user &&
+                <LinkContainer to="profile">
+                  <NavItem>{this.props.user.email}</NavItem>
+                </LinkContainer>
+              }
+
+              {this.props.user &&
+                <NavItem
+                  onClick={ () => {
+                    this.props.signOut().then(() => this.props.pushState('/'));
+                  }}
+                >
+                  Sign Out
+                </NavItem>
+              }
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -106,3 +144,4 @@ export default class App extends Component {
     );
   }
 }
+

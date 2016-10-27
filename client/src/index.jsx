@@ -12,12 +12,18 @@ import logger from './helpers/logger';
 import createStore from './redux/create';
 import getRoutes from './routes';
 
-const client = {};
+import { getUser } from './redux/modules/auth';
+
+import Client from './helpers/client';
+
+const client = window.client = new Client();
 
 const myBrowserHistory = withScroll(browserHistory);
 const dest = document.getElementById('app');
 const store = createStore(myBrowserHistory, client, window.__data); // eslint-disable-line no-underscore-dangle
 const history = syncHistoryWithStore(myBrowserHistory, store);
+
+store.dispatch(getUser());
 
 const renderRouter = (props) => <ReduxAsyncConnect {...props} helpers={{ client }} filter={item => !item.deferred} />;
 const render = routes => {

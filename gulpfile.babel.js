@@ -12,6 +12,7 @@ import webpack from 'webpack';
 import webpackConfig from './webpack/webpack.config.babel';
 
 const path = {
+  bootstrap: 'node_modules/bootstrap/dist/**/*.*',
   images: [
     'client/src/**/*.png'
   ],
@@ -27,7 +28,8 @@ const path = {
     'client/test/**/*.js'
   ],
   lib: 'client/lib',
-  dest: 'client/lib'
+  dest: 'client/lib',
+  assets: 'web/static/assets'
 };
 
 gulp.task('install', () => {
@@ -37,7 +39,12 @@ gulp.task('install', () => {
 
 gulp.task('default', ['build']);
 
-gulp.task('copy', ['copy-images', 'copy-styles']);
+gulp.task('copy', ['copy-bootstrap', 'copy-images', 'copy-styles']);
+
+gulp.task('copy-bootstrap', () => {
+  return gulp.src(path.bootstrap)
+    .pipe(gulp.dest(path.assets));
+});
 
 gulp.task('copy-images', () => {
   return gulp.src(path.images)

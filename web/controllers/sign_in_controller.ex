@@ -3,6 +3,7 @@ defmodule MicrocrawlerWebapp.SignInController do
 
   require Logger
 
+  alias MicrocrawlerWebapp.Account
   alias MicrocrawlerWebapp.Accounts
 
   def index(conn, _params) do
