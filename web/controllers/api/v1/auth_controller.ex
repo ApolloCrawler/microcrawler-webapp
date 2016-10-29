@@ -12,10 +12,11 @@ defmodule MicrocrawlerWebapp.API.V1.AuthController do
         case Comeonin.Bcrypt.checkpw(password, user.password_hashed) do
           true ->
             new_conn = Guardian.Plug.api_sign_in(conn, user)
-            jwt = Guardian.Plug.current_token(new_conn)
+            client_jwt = Guardian.Plug.current_token(new_conn)
+            {:ok, worker_jwt, _} = Guardian.encode_and_sign(user, :worker)
             new_conn
-            |> put_resp_header("authorization", "Bearer #{jwt}")
-            |> json(%{"user": %{"email": user.email}, "jwt": jwt})
+            |> put_resp_header("authorization", "Bearer #{client_jwt}")
+            |> json(%{"user": %{"email": user.email}, "jwt": worker_jwt})
           false ->
             failure(conn)
         end
