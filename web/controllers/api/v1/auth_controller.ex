@@ -15,7 +15,7 @@ defmodule MicrocrawlerWebapp.API.V1.AuthController do
             jwt = Guardian.Plug.current_token(new_conn)
             new_conn
             |> put_resp_header("authorization", "Bearer #{jwt}")
-            |> json(%{"user": %{"email": user.email}})
+            |> json(%{"user": %{"email": user.email}, "jwt": jwt})
           false ->
             failure(conn)
         end
