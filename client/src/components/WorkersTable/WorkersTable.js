@@ -88,6 +88,8 @@ export default class WorkersTable extends Component {
 
     return (
       <div className="container">
+        <h1>Workers</h1>
+
         <Table striped bordered condensed hover>
           <thead>
             <tr>

@@ -3,8 +3,12 @@ import {IndexRoute, Route} from 'react-router';
 // import { isLoaded as isAuthLoaded, load as loadAuth } from 'redux/modules/auth';
 
 import App from './containers/App';
+import Clients from './containers/Clients';
 import Intro from './containers/Intro';
 import NotFound from './containers/NotFound';
+import Profile from './containers/Profile';
+import SignIn from './containers/SignIn';
+import SignUp from './containers/SignUp';
 import Workers from './containers/Workers';
 
 export default (/* store */) => {
@@ -30,9 +34,13 @@ export default (/* store */) => {
    */
   return (
     <Route path="/" component={App}>
-      <IndexRoute component={Workers}/>
+      <IndexRoute component={Intro}/>
 
+      <Route path="clients" component={Clients}/>
       <Route path="intro" component={Intro}/>
+      <Route path="profile" component={Profile}/>
+      <Route path="signin" component={SignIn}/>
+      <Route path="signup" component={SignUp}/>
       <Route path="workers" component={Workers}/>
 
       { /* Catch all route */ }

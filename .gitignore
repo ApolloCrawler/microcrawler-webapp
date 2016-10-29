@@ -27,6 +27,7 @@ erl_crash.dump
 
 npm-debug.log
 
+web/static/assets/js/
 web/static/assets/js*.png
 web/static/assets/js/main.bundle.js
 web/static/assets/js/maps
@@ -34,3 +35,8 @@ web/static/assets/js/maps
 # webpack-isomorphic-tools
 /webpack-stats.json
 /webpack-assets.json
+
+# Local stuff
+accounts.dets
+/web/static/assets/fonts/
+/web/static/assets/css/

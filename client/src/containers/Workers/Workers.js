@@ -26,8 +26,6 @@ export default class Workers extends Component {
       <div className="container">
         <Helmet title="Workers" />
 
-        <h1>Workers</h1>
-
         <WorkersTable workers={this.props.workers} />
       </div>
     );
