@@ -14,7 +14,7 @@ defmodule MicrocrawlerWebapp.GuardianSerializer do
   end
 
   def before_encode_and_sign(account, :worker, _claims) do
-    {:ok, {account, :worker, %{email: account.email, token: account.token}}}
+    {:ok, {account, :worker, %{email: account.email, token: account.token, typ: "worker"}}}
   end
 
   def before_encode_and_sign(object, type, claims) do
