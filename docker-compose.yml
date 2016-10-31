@@ -1,0 +1,16 @@
+version: '2'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+  webapp:
+    build: .
+    command: iex -S mix phoenix.server
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    environment:
+      POSTGRES_HOSTNAME: db
