@@ -25,22 +25,22 @@ defmodule MicrocrawlerWebapp.WorkerSocket do
   # performing token verification on connect.
   def connect(%{"guardian_token" => jwt}, socket) do
     case Guardian.decode_and_verify(jwt) do
-      {:ok, %{"email" => email, "token" => token}} ->
+      {:ok, %{"email" => email, "token" => token, "typ" => "worker"}} ->
         case Accounts.get(email) do
           {:ok, account} ->
             case account.token == token do
               true ->
                 {:ok, socket}
               false ->
-                Logger.info "expired token '#{token}' for account '#{email}'"
+                Logger.debug "worker expired token '#{token}' for account '#{email}'"
                 :error
             end
           error ->
-            Logger.info inspect(error)
+            Logger.debug "worker account '#{email}' not found: #{inspect(error)}"
             :error
         end
       error ->
-        Logger.info inspect(error)
+        Logger.debug "worker jwt '#{jwt}' verification failed with result: #{inspect(error)}"
         :error
     end
   end
