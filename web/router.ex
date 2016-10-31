@@ -21,8 +21,14 @@ defmodule MicrocrawlerWebapp.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  pipeline :api_jwt_auth do
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
+    plug Guardian.Plug.EnsureAuthenticated,
+      handler: MicrocrawlerWebapp.API.V1.AuthController,
+      typ: "access"
   end
 
   pipeline :graphql do
@@ -53,14 +59,19 @@ defmodule MicrocrawlerWebapp.Router do
     post "/", SignUpController, :sign_up
   end
 
-  # Other scopes may use custom stacks.
   scope "/api/v1", as: :api_v1, alias: MicrocrawlerWebapp.API.V1 do
     pipe_through :api
 
-    # Testing route
     post "/auth/signin", AuthController, :sign_in
-    post "/auth/signout", AuthController, :sign_out
     post "/auth/signup", AuthController, :sign_up
+  end
+
+  # Other scopes may use custom stacks.
+  scope "/api/v1", as: :api_v1, alias: MicrocrawlerWebapp.API.V1 do
+    pipe_through [:api, :api_jwt_auth]
+
+    # Testing route
+    post "/auth/signout", AuthController, :sign_out
     get  "/auth/user", AuthController, :user
   end
 
