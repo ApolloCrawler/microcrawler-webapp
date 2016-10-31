@@ -2,4 +2,11 @@
 
 source /root/.nvm/nvm.sh
 
-iex -S mix phoenix.server
+mix ecto.create
+mix phoenix.server
+
+echo "Press [CTRL+C] to stop.."
+while :
+do
+	sleep 10
+done

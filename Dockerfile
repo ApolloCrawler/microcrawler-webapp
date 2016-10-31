@@ -59,14 +59,15 @@ RUN mix local.rebar --force \
 RUN make build-debug
 
 RUN mix deps.get \
-  mix deps.compile \
-  mix compile
+  mix deps.compile
 
 RUN export NVM_DIR="/root/.nvm" \
   && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  \
   && nvm install 6.6.0 \
   && npm install
 
+RUN mix compile
+
 ADD .docker/start.sh /start.sh
 
-ENTRYPOINT ["/bin/bash", "/start.sh"]
+CMD ["/start.sh"]
