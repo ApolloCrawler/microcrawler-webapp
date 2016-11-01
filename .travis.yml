@@ -58,7 +58,7 @@ install:
   - npm run gulp
 
 script:
-   - 'if [ "$TRAVIS_BRANCH" = "docker" ]; then bash ./travis/docker-build; fi'
+   - 'if [ "$TRAVIS_BRANCH" = "docker" ]; then bash .travis/docker-build; fi'
 
 notifications:
   email:
