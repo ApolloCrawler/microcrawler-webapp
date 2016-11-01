@@ -57,6 +57,9 @@ install:
   - npm run check-updates
   - npm run gulp
 
+script:
+   - 'if [ "$TRAVIS_BRANCH" = "docker" ]; then bash ./travis/docker-build; fi'
+
 notifications:
   email:
     - korczis@gmail.com

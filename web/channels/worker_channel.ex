@@ -18,7 +18,12 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     socket = save_worker_info(socket, worker_info)
     send(self, :after_join)
 
-    {:ok, conn} = AMQP.Connection.open
+    amqp_username = Application.fetch_env!(:amqp, :username)
+    amqp_password = Application.fetch_env!(:amqp, :password)
+    amqp_hostname = Application.fetch_env!(:amqp, :hostname)
+    amqp_uri = "amqp://#{amqp_username}:#{amqp_password}@#{amqp_hostname}"
+
+    {:ok, conn} = AMQP.Connection.open(amqp_uri)
     {:ok, chan} = AMQP.Channel.open(conn)
 
     socket = assign(socket, :rabb_conn, conn)
