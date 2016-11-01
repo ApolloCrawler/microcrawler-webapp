@@ -33,11 +33,18 @@ config :logger, :console, format: "[$level] $message\n"
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20
 
+# Configure your AMQP
+config :amqp,
+  username: System.get_env("AMQP_USERNAME") || "guest",
+  password: System.get_env("AMQP_PASSWORD") || "guest",
+  vhost: System.get_env("AMQP_VHOST") || "/",
+  hostname: System.get_env("AMQP_HOSTNAME") || "localhost"
+
 # Configure your database
 config :microcrawler_webapp, MicrocrawlerWebapp.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "microcrawler_webapp_dev",
-  hostname: "localhost",
+  username: System.get_env("POSTGRES_USERNAME") || "postgres",
+  password: System.get_env("POSTGRES_PASSWORD") || "postgres",
+  database: System.get_env("POSTGRES_DATABASE") || "microcrawler_webapp_dev",
+  hostname: System.get_env("POSTGRES_HOSTNAME") || "localhost",
   pool_size: 10
