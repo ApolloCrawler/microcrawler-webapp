@@ -8,6 +8,10 @@ const GET_USER = generateReduxSymbol('auth/GET_USER');
 const GET_USER_SUCCESS = generateReduxSymbol('auth/GET_USER_SUCCESS');
 const GET_USER_FAIL = generateReduxSymbol('auth/GET_USER_FAIL');
 
+const RENEW_WORKER_JWT = generateReduxSymbol('auth/RENEW_WORKER_JWT');
+const RENEW_WORKER_JWT_SUCCESS = generateReduxSymbol('auth/RENEW_WORKER_JWT_SUCCESS');
+const RENEW_WORKER_JWT_FAIL = generateReduxSymbol('auth/RENEW_WORKER_JWT_FAIL');
+
 const SIGN_IN = generateReduxSymbol('auth/SIGN_IN');
 const SIGN_IN_SUCCESS = generateReduxSymbol('auth/SIGN_IN_SUCCESS');
 const SIGN_IN_FAIL = generateReduxSymbol('auth/SIGN_IN_FAIL');
@@ -47,6 +51,13 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         user: null
+      };
+    }
+
+    case RENEW_WORKER_JWT_SUCCESS: {
+      return {
+        ...state,
+        user: action.result.user
       };
     }
 
@@ -127,5 +138,12 @@ export function setProperty(name, value) {
     type: AUTH_SET_PROPERTY,
     name,
     value
+  };
+}
+
+export function renewWorkerJWT() {
+  return {
+    types: [RENEW_WORKER_JWT, RENEW_WORKER_JWT_SUCCESS, RENEW_WORKER_JWT_FAIL],
+    promise: (client) => client.post('/api/v1/auth/renew_worker_jwt')
   };
 }
