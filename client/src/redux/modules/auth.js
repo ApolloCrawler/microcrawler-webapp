@@ -22,7 +22,8 @@ const SIGN_UP_FAIL = generateReduxSymbol('auth/SIGN_UP_FAIL');
 
 const initialState = {
   payload: {},
-  user: null
+  user: null,
+  workerJWT: null
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -39,7 +40,8 @@ export default function reducer(state = initialState, action = {}) {
     case GET_USER_SUCCESS: {
       return {
         ...state,
-        user: action.result.user
+        user: action.result.user,
+        workerJWT: action.result.worker_jwt
       };
     }
 
@@ -56,7 +58,8 @@ export default function reducer(state = initialState, action = {}) {
       cookies.set('authorization', authorization);
       return {
         ...state,
-        user: action.result.user
+        user: action.result.user,
+        workerJWT: action.result.worker_jwt
       };
     }
 

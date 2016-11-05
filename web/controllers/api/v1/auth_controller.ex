@@ -13,10 +13,9 @@ defmodule MicrocrawlerWebapp.API.V1.AuthController do
           true ->
             new_conn = Guardian.Plug.api_sign_in(conn, user)
             client_jwt = Guardian.Plug.current_token(new_conn)
-            {:ok, worker_jwt, _} = Guardian.encode_and_sign(user, :worker)
             new_conn
             |> put_resp_header("authorization", "Bearer #{client_jwt}")
-            |> json(%{"user": %{"email": user.email}, "jwt": worker_jwt})
+            |> json(profile(user))
           false ->
             failure(conn)
         end
@@ -65,11 +64,16 @@ defmodule MicrocrawlerWebapp.API.V1.AuthController do
         |> json(%{})
       _ ->
         conn
-        |> json(%{"user": %{email: user.email}})
+        |> json(profile(user))
     end
 
     conn
     |> json(%{"user": %{}})
+  end
+
+  defp profile(user) do
+    {:ok, worker_jwt, _} = Guardian.encode_and_sign(user, :worker)
+    %{"user": %{email: user.email}, "worker_jwt": worker_jwt}
   end
 
   defp failure(conn) do
