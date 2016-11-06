@@ -8,10 +8,26 @@ defmodule MicrocrawlerWebapp.Couchbase do
     end
   end
 
+  def add!(id, doc) do
+    case Poison.decode(add(id, doc).body) do
+      {:ok, res} ->
+        res
+      _ -> nil
+    end
+  end
+
   def append(id, doc) do
     Logger.debug("MicrocrawlerWebapp.Couchbase.append(#{inspect(id)})")
     case Poison.encode(doc) do
       {:ok, json} -> HTTPoison.post! "#{url_doc_id(id)}/append", json
+    end
+  end
+
+  def append!(id, doc) do
+    case Poison.decode(append(id, doc).body) do
+      {:ok, res} ->
+        res
+      _ -> nil
     end
   end
 
@@ -35,15 +51,39 @@ defmodule MicrocrawlerWebapp.Couchbase do
     end
   end
 
+  def prepend!(id, doc) do
+    case Poison.decode(prepend(id, doc).body) do
+      {:ok, res} ->
+        res
+      _ -> nil
+    end
+  end
+
   def remove(id) do
     Logger.debug("MicrocrawlerWebapp.Couchbase.remove(#{inspect(id)})")
     HTTPoison.delete! url_doc_id(id)
+  end
+
+  def remove!(id) do
+    case Poison.decode(remove(id).body) do
+      {:ok, res} ->
+        res
+      _ -> nil
+    end
   end
 
   def replace(id, doc) do
     Logger.debug("MicrocrawlerWebapp.Couchbase.replace(#{inspect(id)})")
     case Poison.encode(doc) do
       {:ok, json} -> HTTPoison.post! "#{url_doc_id(id)}/replace", json
+    end
+  end
+
+  def replace!(id, doc) do
+    case Poison.decode(replace(id, doc).body) do
+      {:ok, res} ->
+        res
+      _ -> nil
     end
   end
 
@@ -54,10 +94,26 @@ defmodule MicrocrawlerWebapp.Couchbase do
     end
   end
 
+  def set!(id, doc) do
+    case Poison.decode(set(id, doc).body) do
+      {:ok, res} ->
+        res
+      _ -> nil
+    end
+  end
+
   def upsert(id, doc) do
     Logger.debug("MicrocrawlerWebapp.Couchbase.upsert(#{inspect(id)})")
     case Poison.encode(doc) do
       {:ok, json} -> HTTPoison.post! "#{url_doc_id(id)}/upsert", json
+    end
+  end
+
+  def upsert!(id, doc) do
+    case Poison.decode(upsert(id, doc).body) do
+      {:ok, res} ->
+        res
+      _ -> nil
     end
   end
 
