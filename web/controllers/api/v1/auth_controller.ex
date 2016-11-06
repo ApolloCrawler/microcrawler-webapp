@@ -3,11 +3,11 @@ defmodule MicrocrawlerWebapp.API.V1.AuthController do
 
   require Logger
 
-  alias MicrocrawlerWebapp.Account
-  alias MicrocrawlerWebapp.Accounts
+  alias MicrocrawlerWebapp.User
+  alias MicrocrawlerWebapp.Users
 
   def sign_in(conn, %{"email" => email, "password" => password}) do
-    case Accounts.get(email) do
+    case Users.get(email) do
       {:ok, user} ->
         case Comeonin.Bcrypt.checkpw(password, user.password_hashed) do
           true ->
@@ -44,7 +44,7 @@ defmodule MicrocrawlerWebapp.API.V1.AuthController do
 
   def sign_up(conn, %{"email" => email, "password" => password}) do
     data = %{"email" => email, "password" => password, "password_confirmation" => password}
-    case Accounts.insert(Account.changeset(%Account{}, data)) do
+    case Users.insert(User.changeset(%User{}, data)) do
       {:ok, user} -> {}
         conn
         |> json(%{"user": %{email: user.email}})
@@ -62,7 +62,7 @@ defmodule MicrocrawlerWebapp.API.V1.AuthController do
   end
 
   def renew_worker_jwt(conn, _params) do
-    {:ok, user} = Accounts.renew_token(Guardian.Plug.current_resource(conn))
+    {:ok, user} = Users.renew_token(Guardian.Plug.current_resource(conn))
     conn
     |> Guardian.Plug.api_sign_in(user)
     |> json(profile(user))

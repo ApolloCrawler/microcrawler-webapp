@@ -3,7 +3,7 @@ defmodule MicrocrawlerWebapp.WorkerSocket do
 
   require Logger
 
-  alias MicrocrawlerWebapp.Accounts
+  alias MicrocrawlerWebapp.Users
 
   ## Channels
   channel "worker:*", MicrocrawlerWebapp.WorkerChannel
@@ -26,17 +26,17 @@ defmodule MicrocrawlerWebapp.WorkerSocket do
   def connect(%{"guardian_token" => jwt}, socket) do
     case Guardian.decode_and_verify(jwt) do
       {:ok, %{"email" => email, "token" => token, "typ" => "worker"}} ->
-        case Accounts.get(email) do
-          {:ok, account} ->
-            case account.token == token do
+        case Users.get(email) do
+          {:ok, user} ->
+            case user.token == token do
               true ->
                 {:ok, socket}
               false ->
-                Logger.debug "worker expired token '#{token}' for account '#{email}'"
+                Logger.debug "worker expired token '#{token}' for user '#{email}'"
                 :error
             end
           error ->
-            Logger.debug "worker account '#{email}' not found: #{inspect(error)}"
+            Logger.debug "worker user '#{email}' not found: #{inspect(error)}"
             :error
         end
       error ->
