@@ -18,6 +18,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {MicrocrawlerWebapp, []},
+      # TODO: Try to keep in
       applications: [
         :graphql,
         :phoenix,
@@ -29,7 +30,8 @@ defmodule MicrocrawlerWebapp.Mixfile do
         :gettext,
         :phoenix_ecto,
         :postgrex,
-        :amqp
+        :amqp,
+        :httpoison
       ]
     ]
   end
@@ -48,6 +50,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
       {:dialyxir, "~> 0.3.5", only: [:dev]},
       {:graphql, "~> 0.3"},
       {:guardian, "~> 0.13.0"},
+      {:httpoison, "~> 0.9.2"},
       {:phoenix, "~> 1.2.1", override: true},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.0"},

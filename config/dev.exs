@@ -48,3 +48,7 @@ config :microcrawler_webapp, MicrocrawlerWebapp.Repo,
   database: System.get_env("POSTGRES_DATABASE") || "microcrawler_webapp_dev",
   hostname: System.get_env("POSTGRES_HOSTNAME") || "localhost",
   pool_size: 10
+
+config :microcrawler_webapp, MicrocrawlerWebapp.Couchbase,
+  url: "http://localhost:5000",
+  bucket: "default"
