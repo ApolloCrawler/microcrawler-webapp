@@ -25,7 +25,7 @@ defmodule MicrocrawlerWebapp.WorkerSocket do
   # performing token verification on connect.
   def connect(%{"guardian_token" => jwt}, socket) do
     case Guardian.decode_and_verify(jwt) do
-      {:ok, %{"email" => email, "token" => token, "typ" => "worker"}} ->
+      {:ok, %{"email" => email, "token" => token}} ->
         case Accounts.get(email) do
           {:ok, account} ->
             case account.token == token do
