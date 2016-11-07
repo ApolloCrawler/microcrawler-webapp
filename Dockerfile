@@ -1,13 +1,4 @@
-FROM ubuntu:14.04
-
-#RUN echo '\n\
-#deb http://archive.ubuntu.com/ubuntu/ xenial main restricted\n\
-#deb-src http://archive.ubuntu.com/ubuntu/ xenial main restricted\n\
-#deb http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted\n\
-#deb-src http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted\n\
-#deb http://archive.ubuntu.com/ubuntu/ xenial universe\n\
-#deb-src http://archive.ubuntu.com/ubuntu/ xenial universe\n\
-#>> /etc/apt/sources.list
+FROM ubuntu:16.04
 
 # Set the locale
 RUN locale-gen en_US.UTF-8
@@ -37,9 +28,6 @@ RUN apt-get update \
 # Install nvm
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
 
-# Install rustup
-RUN curl -sSf https://static.rust-lang.org/rustup.sh | /bin/bash -s -- --verbose --channel=nightly
-
 # Switch to directory with sources
 WORKDIR /src
 
@@ -55,8 +43,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends erlang elixir
 # Install mix related "package managers"
 RUN mix local.rebar --force \
   && mix local.hex --force
-
-RUN make build-debug
 
 RUN mix deps.get \
   mix deps.compile
