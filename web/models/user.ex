@@ -1,9 +1,9 @@
-defmodule MicrocrawlerWebapp.Account do
+defmodule MicrocrawlerWebapp.User do
 
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "account" do
+  schema "user" do
     field :email
     field :password
     field :password_confirmation
@@ -11,8 +11,8 @@ defmodule MicrocrawlerWebapp.Account do
     field :token
   end
 
-  def changeset(account, params \\ %{}) do
-    account
+  def changeset(user, params \\ %{}) do
+    user
     |> cast(params, [:email, :password, :password_confirmation])
     |> validate_required([:email, :password])
     |> validate_length(:email, min: 3)
@@ -21,11 +21,11 @@ defmodule MicrocrawlerWebapp.Account do
     |> validate_confirmation(:password)
   end
 
-  def hash_password(account) do
-    %{account | password_hashed: Comeonin.Bcrypt.hashpwsalt(account.password)}
+  def hash_password(user) do
+    %{user | password_hashed: Comeonin.Bcrypt.hashpwsalt(user.password)}
   end
 
-  def generate_token(account) do
-    %{account | token: Ecto.UUID.generate}
+  def generate_token(user) do
+    %{user | token: Ecto.UUID.generate}
   end
 end

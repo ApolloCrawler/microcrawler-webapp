@@ -8,7 +8,7 @@ defmodule MicrocrawlerWebapp do
 
     # Define workers and child supervisors to be supervised
     children = [
-      worker(MicrocrawlerWebapp.Accounts, [:"accounts.dets"]),
+      worker(MicrocrawlerWebapp.Users, [:"users.dets"]),
       # Start the Ecto repository
       supervisor(MicrocrawlerWebapp.Repo, []),
       # Start the endpoint when the application starts

@@ -3,20 +3,20 @@ defmodule MicrocrawlerWebapp.SignInController do
 
   require Logger
 
-  alias MicrocrawlerWebapp.Accounts
+  alias MicrocrawlerWebapp.Users
 
   def index(conn, _params) do
     render conn, "index.html"
   end
 
   def sign_in(conn, %{"creds" => %{"email" => email, "password" => password}}) do
-    case Accounts.get(email) do
-      {:ok, account} ->
-        case Comeonin.Bcrypt.checkpw(password, account.password_hashed) do
+    case Users.get(email) do
+      {:ok, user} ->
+        case Comeonin.Bcrypt.checkpw(password, user.password_hashed) do
           true ->
             conn
-            |> Guardian.Plug.sign_in(account)
-            |> redirect(to: account_path(conn, :index))
+            |> Guardian.Plug.sign_in(user)
+            |> redirect(to: user_path(conn, :index))
           false ->
             failure(conn)
         end
