@@ -2,118 +2,142 @@ defmodule MicrocrawlerWebapp.Couchbase do
   require Logger
 
   def add(id, doc) do
-    Logger.debug("MicrocrawlerWebapp.Couchbase.add(#{inspect(id)})")
-    case Poison.encode(doc) do
-      {:ok, json} -> HTTPoison.post! "#{url_doc_id(id)}/add", json
+    case add_raw(id, doc) do
+      {:ok, res} ->
+        case Poison.decode(res.body) do
+          {:ok, res} ->
+            res
+          _ -> nil
+        end
     end
   end
 
-  def add!(id, doc) do
-    case Poison.decode(add(id, doc).body) do
-      {:ok, res} ->
-        res
-      _ -> nil
+  def add_raw(id, doc) do
+    Logger.debug("MicrocrawlerWebapp.Couchbase.add_raw(#{inspect(id)})")
+    case Poison.encode(doc) do
+      {:ok, json} -> HTTPoison.post "#{url_doc_id(id)}/add", json
     end
   end
 
   def append(id, doc) do
-    Logger.debug("MicrocrawlerWebapp.Couchbase.append(#{inspect(id)})")
-    case Poison.encode(doc) do
-      {:ok, json} -> HTTPoison.post! "#{url_doc_id(id)}/append", json
+    case append_raw(id, doc) do
+      {:ok, res} ->
+        case Poison.decode(res.body) do
+          {:ok, res} ->
+            res
+          _ -> nil
+        end
     end
   end
 
-  def append!(id, doc) do
-    case Poison.decode(append(id, doc).body) do
-      {:ok, res} ->
-        res
-      _ -> nil
+  def append_raw(id, doc) do
+    Logger.debug("MicrocrawlerWebapp.Couchbase.append_raw(#{inspect(id)})")
+    case Poison.encode(doc) do
+      {:ok, json} -> HTTPoison.post "#{url_doc_id(id)}/append", json
     end
   end
 
   def get(id) do
-    Logger.debug("MicrocrawlerWebapp.Couchbase.get(#{inspect(id)})")
-    HTTPoison.get! url_doc_id(id)
+    case get_raw(id) do
+      {:ok, res} ->
+        case Poison.decode(res.body) do
+          {:ok, res} ->
+            res
+          {:err} -> nil
+        end
+    end
   end
 
-  def get!(id) do
-    case Poison.decode(get(id).body) do
-      {:ok, res} ->
-        res
-      _ -> nil
-    end
+  def get_raw(id) do
+    Logger.debug("MicrocrawlerWebapp.Couchbase.get_raw(#{inspect(id)})")
+    HTTPoison.get url_doc_id(id)
   end
 
   def prepend(id, doc) do
-    Logger.debug("MicrocrawlerWebapp.Couchbase.prepend(#{inspect(id)})")
-    case Poison.encode(doc) do
-      {:ok, json} -> HTTPoison.post! "#{url_doc_id(id)}/prepend", json
+    case prepend_raw(id, doc) do
+      {:ok, res} ->
+        case Poison.decode(res.body) do
+          {:ok, res} ->
+            res
+          _ -> nil
+        end
     end
   end
 
-  def prepend!(id, doc) do
-    case Poison.decode(prepend(id, doc).body) do
-      {:ok, res} ->
-        res
-      _ -> nil
+  def prepend_raw(id, doc) do
+    Logger.debug("MicrocrawlerWebapp.Couchbase.prepend_raw(#{inspect(id)})")
+    case Poison.encode(doc) do
+      {:ok, json} -> HTTPoison.post "#{url_doc_id(id)}/prepend", json
     end
   end
 
   def remove(id) do
-    Logger.debug("MicrocrawlerWebapp.Couchbase.remove(#{inspect(id)})")
-    HTTPoison.delete! url_doc_id(id)
+    case remove_raw(id) do
+      {:ok, res} ->
+        case Poison.decode(res.body) do
+          {:ok, res} ->
+            res
+          _ -> nil
+        end
+    end
   end
 
-  def remove!(id) do
-    case Poison.decode(remove(id).body) do
-      {:ok, res} ->
-        res
-      _ -> nil
-    end
+  def remove_raw(id) do
+    Logger.debug("MicrocrawlerWebapp.Couchbase.remove_raw(#{inspect(id)})")
+    HTTPoison.delete url_doc_id(id)
   end
 
   def replace(id, doc) do
-    Logger.debug("MicrocrawlerWebapp.Couchbase.replace(#{inspect(id)})")
-    case Poison.encode(doc) do
-      {:ok, json} -> HTTPoison.post! "#{url_doc_id(id)}/replace", json
+    case replace_raw(id, doc) do
+      {:ok, res} ->
+        case Poison.decode(res.body) do
+          {:ok, res} ->
+            res
+          _ -> nil
+        end
     end
   end
 
-  def replace!(id, doc) do
-    case Poison.decode(replace(id, doc).body) do
-      {:ok, res} ->
-        res
-      _ -> nil
+  def replace_raw(id, doc) do
+    Logger.debug("MicrocrawlerWebapp.Couchbase.replace_raw(#{inspect(id)})")
+    case Poison.encode(doc) do
+      {:ok, json} -> HTTPoison.post "#{url_doc_id(id)}/replace", json
     end
   end
 
   def set(id, doc) do
-    Logger.debug("MicrocrawlerWebapp.Couchbase.set(#{inspect(id)})")
-    case Poison.encode(doc) do
-      {:ok, json} -> HTTPoison.post! "#{url_doc_id(id)}/set", json
+    case set_raw(id, doc) do
+      {:ok, res} ->
+        case Poison.decode(res.body) do
+          {:ok, res} ->
+            res
+          _ -> nil
+        end
     end
   end
 
-  def set!(id, doc) do
-    case Poison.decode(set(id, doc).body) do
-      {:ok, res} ->
-        res
-      _ -> nil
+  def set_raw(id, doc) do
+    Logger.debug("MicrocrawlerWebapp.Couchbase.set_raw(#{inspect(id)})")
+    case Poison.encode(doc) do
+      {:ok, json} -> HTTPoison.post "#{url_doc_id(id)}/set", json
     end
   end
 
   def upsert(id, doc) do
-    Logger.debug("MicrocrawlerWebapp.Couchbase.upsert(#{inspect(id)})")
-    case Poison.encode(doc) do
-      {:ok, json} -> HTTPoison.post! "#{url_doc_id(id)}/upsert", json
+    case upsert_raw(id, doc) do
+      {:ok, res} ->
+        case Poison.decode(res.body) do
+          {:ok, res} ->
+            res
+          _ -> nil
+        end
     end
   end
 
-  def upsert!(id, doc) do
-    case Poison.decode(upsert(id, doc).body) do
-      {:ok, res} ->
-        res
-      _ -> nil
+  def upsert_raw(id, doc) do
+    Logger.debug("MicrocrawlerWebapp.Couchbase.upsert_raw(#{inspect(id)})")
+    case Poison.encode(doc) do
+      {:ok, json} -> HTTPoison.post "#{url_doc_id(id)}/upsert", json
     end
   end
 
