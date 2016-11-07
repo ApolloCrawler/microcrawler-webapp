@@ -65,7 +65,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
       {:amqp_client, git: "https://github.com/jbrisbin/amqp_client.git", override: true},
       {:amqp, "~> 0.1.4"},
       {:execjs, "~> 1.1"},
-      {:rustler, git: "https://github.com/korczis/rustler_mix.git",}
+      # {:rustler, git: "https://github.com/korczis/rustler_mix.git",}
     ]
   end
 
