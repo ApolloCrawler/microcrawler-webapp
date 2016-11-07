@@ -1,0 +1,8 @@
+<div class="jumbotron">
+  <div class="text-center">
+    <h1>User</h1>
+    <p><%= @user.email %></p>
+    <textarea cols="80" rows="5" readonly><%= @jwt %></textarea>
+    <p><%= link "Renew", to: user_path(@conn, :renew), method: "post", class: "btn btn-primary" %></p>
+  </p>
+</div>

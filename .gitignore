@@ -37,6 +37,6 @@ web/static/assets/js/maps
 /webpack-assets.json
 
 # Local stuff
-accounts.dets
+users.dets
 /web/static/assets/fonts/
 /web/static/assets/css/

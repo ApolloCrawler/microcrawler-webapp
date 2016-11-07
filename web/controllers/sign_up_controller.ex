@@ -1,18 +1,18 @@
 defmodule MicrocrawlerWebapp.SignUpController do
   use MicrocrawlerWebapp.Web, :controller
 
-  alias MicrocrawlerWebapp.Account
-  alias MicrocrawlerWebapp.Accounts
+  alias MicrocrawlerWebapp.User
+  alias MicrocrawlerWebapp.Users
 
   def index(conn, _params) do
-    render conn, "index.html", changeset: Account.changeset(%Account{})
+    render conn, "index.html", changeset: User.changeset(%User{})
   end
 
-  def sign_up(conn, %{"account" => params}) do
-    case Accounts.insert(Account.changeset(%Account{}, params)) do
-      {:ok, account} ->
+  def sign_up(conn, %{"user" => params}) do
+    case Users.insert(User.changeset(%User{}, params)) do
+      {:ok, user} ->
         conn
-        |> put_flash(:info, "account #{account.email} created")
+        |> put_flash(:info, "user #{user.email} created")
         |> redirect(to: sign_in_path(conn, :index))
       {:error, changeset} ->
         conn

@@ -38,11 +38,11 @@ defmodule MicrocrawlerWebapp.Router do
     plug Guardian.Plug.LoadResource
   end
 
-  scope "/account", MicrocrawlerWebapp do
+  scope "/user", MicrocrawlerWebapp do
     pipe_through [:browser, :browser_session, :static_layout]
 
-    get "/", AccountController, :index
-    post "/", AccountController, :renew
+    get "/", UserController, :index
+    post "/", UserController, :renew
   end
 
   scope "/signin_old", MicrocrawlerWebapp do

@@ -6,7 +6,7 @@ lib-cov
 *.pid
 *.gz
 
-accounts.dets
+users.dets
 
 .git
 .idea

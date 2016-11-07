@@ -1,18 +1,17 @@
 version: '2'
 services:
-  db:
+  couchbase:
+    image: korczis/couchbase
+  postgres:
     image: postgres
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
   rabbitmq:
     image: rabbitmq:3-management
-  webapp:
-    build: .
-    command: iex -S mix phoenix.server
+  gauc:
+    image: korczis/gauc
     ports:
-      - "4000:4000"
+      - "5000:5000"
     depends_on:
-      - db
-    environment:
-      POSTGRES_HOSTNAME: db
+      - couchbase

@@ -3,18 +3,18 @@ defmodule MicrocrawlerWebapp.GuardianSerializer do
 
   use Guardian.Hooks
 
-  alias MicrocrawlerWebapp.Account
+  alias MicrocrawlerWebapp.User
 
-  def for_token(%Account{:email => email, :token => token}) do
+  def for_token(%User{:email => email, :token => token}) do
     {:ok, %{email: email, token: token}}
   end
 
   def from_token(%{"email" => email, "token" => token}) do
-    {:ok, %Account{email: email, token: token}}
+    {:ok, %User{email: email, token: token}}
   end
 
-  def before_encode_and_sign(account, :worker, _claims) do
-    {:ok, {account, :worker, %{email: account.email, token: account.token, typ: "worker"}}}
+  def before_encode_and_sign(user, :worker, _claims) do
+    {:ok, {user, :worker, %{email: user.email, token: user.token, typ: "worker"}}}
   end
 
   def before_encode_and_sign(object, type, claims) do
