@@ -45,7 +45,6 @@ defmodule MicrocrawlerWebapp.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      # {:couchie, git: "https://github.com/nirvana/couchie.git"},
       {:comeonin, "~> 2.3"},
       {:dialyxir, "~> 0.3.5", only: [:dev]},
       {:graphql, "~> 0.3"},
@@ -55,7 +54,6 @@ defmodule MicrocrawlerWebapp.Mixfile do
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
-      # {:phoenix_pubsub_rabbitmq, "0.0.1"},
       {:phoenix_html, "~> 2.6"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:poison, "~> 2.2.0", override: true},
@@ -64,8 +62,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
       {:cowboy, "~> 1.0"},
       {:amqp_client, git: "https://github.com/jbrisbin/amqp_client.git", override: true},
       {:amqp, "~> 0.1.4"},
-      {:execjs, "~> 1.1"},
-      # {:rustler, git: "https://github.com/korczis/rustler_mix.git",}
+      {:execjs, "~> 1.1"}
     ]
   end
 
