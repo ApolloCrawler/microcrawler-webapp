@@ -96,13 +96,23 @@ export default class App extends Component {
 
           <Navbar.Collapse>
             <Nav navbar>
-              <LinkContainer to="clients">
-                <NavItem>Clients</NavItem>
-              </LinkContainer>
+              {this.props.user &&
+                <LinkContainer to="clients">
+                  <NavItem>Clients</NavItem>
+                </LinkContainer>
+              }
 
-              <LinkContainer to="workers">
-                <NavItem>Workers</NavItem>
-              </LinkContainer>
+              {this.props.user &&
+                <LinkContainer to="crawlers">
+                  <NavItem>Crawlers</NavItem>
+                </LinkContainer>
+              }
+
+              {this.props.user &&
+                <LinkContainer to="workers">
+                  <NavItem>Workers</NavItem>
+                </LinkContainer>
+              }
             </Nav>
 
             <Nav navbar pullRight>

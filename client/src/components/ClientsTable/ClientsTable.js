@@ -78,7 +78,7 @@ export function getClientFlag(client) {
   );
 }
 
-export default class ClientsTable extends Component {
+export default class CrawlersTable extends Component {
   static propTypes = {
     clients: PropTypes.object
   };

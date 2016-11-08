@@ -64,6 +64,8 @@ defmodule MicrocrawlerWebapp.Router do
 
     post "/auth/signin", AuthController, :sign_in
     post "/auth/signup", AuthController, :sign_up
+
+    get "/crawlers", CrawlersController, :index
   end
 
   # Other scopes may use custom stacks.
