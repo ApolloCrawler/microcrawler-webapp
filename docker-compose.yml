@@ -1,17 +1,40 @@
 version: '2'
 services:
+  elasticsearch:
+    image: korczis/elasticsearch:2.4.0-couchbase
+    ports:
+      - "9091:9091"
+      - "9200:9200"
+      - "9300:9300"
   couchbase:
-    image: korczis/couchbase
+    image: korczis/couchbase:4.5.1
+    ports:
+      - "8091:8091"
+    depends_on:
+      - elasticsearch
   postgres:
     image: postgres
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
+    ports:
+      - "5432:5432"
   rabbitmq:
     image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
   gauc:
-    image: korczis/gauc
+    image: korczis/gauc:0.1.20
+    environment:
+      COUCHBASE_URI: "couchbase://couchbase/default"
+      RUST_LOG: "debug"
+      RUST_BACKTRACE: 1
     ports:
       - "5000:5000"
+    entrypoint:
+      - "/cargo/bin/gauc"
+      - "-r"
     depends_on:
       - couchbase
+    restart: unless-stopped
