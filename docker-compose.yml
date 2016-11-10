@@ -10,8 +10,20 @@ services:
     image: korczis/couchbase:4.5.1
     ports:
       - "8091:8091"
+      - "8092:8092"
+      - "8093:8093"
+      - "8094:8094"
+      - "11207:11207"
+      - "11210:11210"
+      - "11211:11211"
+      - "18091:18091"
+      - "18092:18092"
+      - "18093:18093"
     depends_on:
       - elasticsearch
+    ulimits:
+      core: 100000000
+      memlock: 100000000
   postgres:
     image: postgres
     environment:
@@ -30,6 +42,7 @@ services:
       COUCHBASE_URI: "couchbase://couchbase/default"
       RUST_LOG: "debug"
       RUST_BACKTRACE: 1
+      LCB_LOGLEVEL: 5
     ports:
       - "5000:5000"
     entrypoint:
