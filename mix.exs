@@ -46,6 +46,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
   defp deps do
     [
       {:comeonin, "~> 2.3"},
+      {:credo, "~> 0.4", only: [:dev, :test]},
       {:dialyxir, "~> 0.3.5", only: [:dev]},
       {:graphql, "~> 0.3"},
       {:guardian, "~> 0.13.0"},
