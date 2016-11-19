@@ -1,5 +1,11 @@
 defmodule MicrocrawlerWebapp.Couchbase do
+  @moduledoc """
+  TODO
+  """
+
   require Logger
+
+  alias MicrocrawlerWebapp.Couchbase
 
   def add(id, doc) do
     case add_raw(id, doc) do
@@ -142,11 +148,11 @@ defmodule MicrocrawlerWebapp.Couchbase do
   end
 
   defp bucket do
-    Application.get_env(:microcrawler_webapp, MicrocrawlerWebapp.Couchbase)[:bucket]
+    Application.get_env(:microcrawler_webapp, Couchbase)[:bucket]
   end
 
   defp url() do
-    Application.get_env(:microcrawler_webapp, MicrocrawlerWebapp.Couchbase)[:url]
+    Application.get_env(:microcrawler_webapp, Couchbase)[:url]
   end
 
   def url_doc() do

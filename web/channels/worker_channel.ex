@@ -1,10 +1,19 @@
 defmodule MicrocrawlerWebapp.WorkerChannel do
+  @moduledoc """
+  TODO
+  """
+
   use Phoenix.Channel
 
   require Logger
 
   alias MicrocrawlerWebapp.ActiveWorkers
   alias MicrocrawlerWebapp.Endpoint
+  alias AMQP.Connection
+  alias AMQP.Channel
+  alias AMQP.Queue
+  alias AMQP.Basic
+  alias MicrocrawlerWebapp.IpInfo
 
   def send_joined_workers_info() do
     Endpoint.broadcast("worker:lobby", "send_worker_info", %{})
@@ -23,18 +32,19 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     amqp_hostname = Application.fetch_env!(:amqp, :hostname)
     amqp_uri = "amqp://#{amqp_username}:#{amqp_password}@#{amqp_hostname}"
 
-    {:ok, conn} = AMQP.Connection.open(amqp_uri)
-    {:ok, chan} = AMQP.Channel.open(conn)
+    {:ok, conn} = Connection.open(amqp_uri)
+    {:ok, chan} = Channel.open(conn)
 
     socket = assign(socket, :rabb_conn, conn)
     socket = assign(socket, :rabb_chan, chan)
 
-    AMQP.Queue.declare(chan, "workq", durable: true)
-    AMQP.Basic.qos(chan, prefetch_count: 1)
-    AMQP.Basic.consume(chan, "workq", nil)
+    Queue.declare(chan, "workq", durable: true)
+    Basic.qos(chan, prefetch_count: 1)
+    Basic.consume(chan, "workq", nil)
 
     # TODO:
-    # - nejak je potreba resit, kdyz conn spadne a take obracene, ze by link na conn?
+    # - nejak je potreba resit, kdyz conn spadne a take obracene,
+    #   ze by link na conn?
     {:ok, %{msg: "Welcome!"}, socket}
   end
 
@@ -65,7 +75,9 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     Logger.debug "Received event - ping"
     Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
     ActiveWorkers.update_joined_worker_info(%{ping: payload})
-    push socket, "pong", Map.merge(payload, %{ts: :os.system_time(:milli_seconds)})
+    push(
+      socket, "pong", Map.merge(payload, %{ts: :os.system_time(:milli_seconds)})
+    )
     Logger.debug "Connected: #{inspect(ActiveWorkers.joined_workers)}"
     {:reply, {:ok, payload}, socket}
   end
@@ -73,7 +85,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
   def handle_in("done", payload, socket) do
     Logger.debug "Received event - done"
     Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
-    AMQP.Basic.ack(
+    Basic.ack(
       socket.assigns[:rabb_chan],
       socket.assigns[:rabb_meta].delivery_tag
     )
@@ -99,7 +111,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     Logger.debug inspect(reason)
     Logger.debug inspect(self)
     Logger.debug inspect(socket)
-    AMQP.Connection.close(socket.assigns[:rabb_conn])
+    Connection.close(socket.assigns[:rabb_conn])
     :ok
   end
 
@@ -126,7 +138,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
   end
 
   defp country_code(ip) do
-    case MicrocrawlerWebapp.IpInfo.for(ip) do
+    case IpInfo.for(ip) do
       {:ok, info} -> elem(info, 0)
       :error      -> ""
     end

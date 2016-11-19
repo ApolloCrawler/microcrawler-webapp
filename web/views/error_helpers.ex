@@ -32,7 +32,9 @@ defmodule MicrocrawlerWebapp.ErrorHelpers do
     #     dgettext "errors", "is invalid"
     #
     if count = opts[:count] do
-      Gettext.dngettext(MicrocrawlerWebapp.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(
+        MicrocrawlerWebapp.Gettext, "errors", msg, msg, count, opts
+      )
     else
       Gettext.dgettext(MicrocrawlerWebapp.Gettext, "errors", msg, opts)
     end

@@ -1,4 +1,8 @@
 defmodule Mix.Tasks.Docker.Couchbase do
+  @moduledoc """
+  TODO
+  """
+
   use Mix.Task
 
   @shortdoc "Run Couchbase in Docker"

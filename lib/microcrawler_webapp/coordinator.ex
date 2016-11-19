@@ -1,4 +1,8 @@
 defmodule MicrocrawlerWebapp.Coordinator do
+  @moduledoc """
+  TODO
+  """
+
   use GenServer
 
   @name __MODULE__
@@ -35,20 +39,15 @@ defmodule MicrocrawlerWebapp.Coordinator do
     case is_already_requester(state, msg(request, :pid)) do
       true -> reply(state, {:error, :already_requester})
       false -> handle_requested(state, request, from)
-    end |> lg
+    end
   end
 
   def handle_cast(msg(type: :commited) = request, state) do
-    state |> handle_commited(request) |> noreply |> lg
-  end
-
-  defp lg(x) do
-    Logger.debug "XXX: #{inspect(x)}"
-    x
+    state |> handle_commited(request) |> noreply
   end
 
   def handle_info({:DOWN, _ref, :process, pid, reason}, state) do
-    state |> delete_requester(pid, reason) |> accept_next_waiting |> noreply |> lg
+    state |> delete_requester(pid, reason) |> accept_next_waiting |> noreply
   end
 
   def handle_info(msg, state) do
@@ -74,15 +73,21 @@ defmodule MicrocrawlerWebapp.Coordinator do
       nil ->
         # coordinator was probably restarted
         Logger.warn "commiting #{inspect(request)} which is not requested"
-      item(type: :requested, pid: pid, waiting: waiting) = value->
+      item(type: :requested, pid: pid, waiting: waiting) = value ->
         if pid != msg(request, :pid) do
           # coordinator was probably restarted
-          Logger.warn "commiting #{inspect(request)} which is requested by someone else as #{inspect(value)}"
+          Logger.warn(
+            "commiting #{inspect(request)} which is " <>
+            "requested by someone else as #{inspect(value)}"
+          )
         end
         reject_waiting(waiting)
       item(type: :commited) = value ->
         # coordinator was probably restarted
-        Logger.warn "commiting #{inspect(request)} which is already commited as #{inspect(value)}"
+        Logger.warn(
+          "commiting #{inspect(request)} which is " <>
+          "already commited as #{inspect(value)}"
+        )
     end
     state |> demonitor(request) |> put(request)
   end
@@ -112,9 +117,9 @@ defmodule MicrocrawlerWebapp.Coordinator do
         # coordinator was probably restarted
         Logger.warn "requester #{inspect(request)} not found"
         state
-      {{_key, mon}, requesters} ->
+      {{_key, mon}, other_requesters} ->
         Process.demonitor(mon, [:flush])
-        state(state, requesters: requesters)
+        state(state, requesters: other_requesters)
     end
   end
 

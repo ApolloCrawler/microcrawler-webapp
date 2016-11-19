@@ -1,4 +1,8 @@
 defmodule Mix.Tasks.Docker.Elasticsearch do
+  @moduledoc """
+  TODO
+  """
+
   use Mix.Task
 
   @shortdoc "Run Elasticsearch in Docker"

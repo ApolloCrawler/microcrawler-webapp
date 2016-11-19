@@ -1,5 +1,11 @@
 defmodule MicrocrawlerWebapp do
+  @moduledoc """
+  TODO
+  """
+
   use Application
+
+  alias MicrocrawlerWebapp.Endpoint
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -14,7 +20,8 @@ defmodule MicrocrawlerWebapp do
       supervisor(MicrocrawlerWebapp.Repo, []),
       # Start the endpoint when the application starts
       supervisor(MicrocrawlerWebapp.Endpoint, []),
-      # Start your own worker by calling: MicrocrawlerWebapp.Worker.start_link(arg1, arg2, arg3)
+      # Start your own worker by calling:
+      #   MicrocrawlerWebapp.Worker.start_link(arg1, arg2, arg3)
       # worker(MicrocrawlerWebapp.Worker, [arg1, arg2, arg3]),
       worker(MicrocrawlerWebapp.ActiveWorkers, []),
     ]
@@ -28,7 +35,7 @@ defmodule MicrocrawlerWebapp do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    MicrocrawlerWebapp.Endpoint.config_change(changed, removed)
+    Endpoint.config_change(changed, removed)
     :ok
   end
 end

@@ -1,4 +1,8 @@
 defmodule Mix.Tasks.Docker.Rabbitmq do
+  @moduledoc """
+  TODO
+  """
+
   use Mix.Task
 
   @shortdoc "Run RabbitMQ in Docker"

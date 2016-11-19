@@ -1,4 +1,8 @@
 defmodule Mix.Tasks.Docker.Kibana do
+  @moduledoc """
+  TODO
+  """
+
   use Mix.Task
 
   @shortdoc "Run Kibana in Docker"

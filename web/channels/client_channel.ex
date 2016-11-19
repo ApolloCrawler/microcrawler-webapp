@@ -1,4 +1,8 @@
 defmodule MicrocrawlerWebapp.ClientChannel do
+  @moduledoc """
+  TODO
+  """
+
   use Phoenix.Channel
 
   require Logger
