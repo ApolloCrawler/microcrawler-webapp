@@ -1,6 +1,12 @@
 # For more details see https://github.com/graphql-elixir/graphql
 
 defmodule MicrocrawlerWebapp.TestSchema do
+  @moduledoc """
+  TODO
+  """
+
+  alias MicrocrawlerWebapp.TestSchema
+
   def schema do
     %GraphQL.Schema{
       query: %GraphQL.Type.ObjectType{
@@ -8,10 +14,13 @@ defmodule MicrocrawlerWebapp.TestSchema do
         fields: %{
           greeting: %{
             type: %GraphQL.Type.String{},
-            resolve: &MicrocrawlerWebapp.TestSchema.greeting/3,
+            resolve: &TestSchema.greeting/3,
             description: "Greeting",
             args: %{
-              name: %{type: %GraphQL.Type.String{}, description: "The name of who you'd like to greet."},
+              name: %{
+                type: %GraphQL.Type.String{},
+                description: "The name of who you'd like to greet."
+              },
             }
           }
         }

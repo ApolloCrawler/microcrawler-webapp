@@ -1,4 +1,8 @@
 defmodule MicrocrawlerWebapp.GuardianSerializer do
+  @moduledoc """
+  TODO
+  """
+
   @behaviour Guardian.Serializer
 
   use Guardian.Hooks
@@ -14,7 +18,10 @@ defmodule MicrocrawlerWebapp.GuardianSerializer do
   end
 
   def before_encode_and_sign(user, :worker, _claims) do
-    {:ok, {user, :worker, %{email: user.email, token: user.token, typ: "worker"}}}
+    {
+      :ok,
+      {user, :worker, %{email: user.email, token: user.token, typ: "worker"}}
+    }
   end
 
   def before_encode_and_sign(object, type, claims) do

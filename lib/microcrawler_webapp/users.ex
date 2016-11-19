@@ -1,7 +1,12 @@
 defmodule MicrocrawlerWebapp.Users do
+  @moduledoc """
+  TODO
+  """
+
   use GenServer
 
   alias MicrocrawlerWebapp.User
+  alias Ecto.Changeset
 
   def start_link(dets_name) do
     GenServer.start_link(__MODULE__, dets_name, name: __MODULE__)
@@ -12,14 +17,14 @@ defmodule MicrocrawlerWebapp.Users do
     case changeset.valid? do
       true ->
         user = changeset
-               |> Ecto.Changeset.apply_changes
+               |> Changeset.apply_changes
                |> User.hash_password
                |> User.generate_token
         case GenServer.call(__MODULE__, {:create, user}) do
           {:ok, _user} = ok ->
             ok
           {:error, :already_exists} ->
-            {:error, Ecto.Changeset.add_error(changeset, :email, "already exists")}
+            {:error, Changeset.add_error(changeset, :email, "already exists")}
         end
       false ->
         {:error, changeset}

@@ -1,4 +1,8 @@
 defmodule MicrocrawlerWebapp.IpInfoLoader do
+  @moduledoc """
+  TODO
+  """
+
   use Bitwise
   require Logger
 
@@ -34,7 +38,8 @@ defmodule MicrocrawlerWebapp.IpInfoLoader do
 
   defp process_file(filename, lines) do
     IO.puts "Loading #{filename}"
-    File.stream!(filename, [:read])
+    filename
+    |> File.stream!([:read])
     |> Enum.reduce(lines, &process_line/2)
   end
 
@@ -69,7 +74,13 @@ defmodule MicrocrawlerWebapp.IpInfoLoader do
 end
 
 defmodule MicrocrawlerWebapp.IpInfo do
+  @moduledoc """
+  TODO
+  """
+
   require MicrocrawlerWebapp.IpInfoLoader
+
+  alias MicrocrawlerWebapp.IpInfoLoader
 
   @dir ["data", "ip"]
 
@@ -81,7 +92,7 @@ defmodule MicrocrawlerWebapp.IpInfo do
   @external_resource Path.join(@dir ++ ["delegated-ripencc-latest"])
 
   def for(ip) do
-    search(MicrocrawlerWebapp.IpInfoLoader.ip_to_int(ip), all_ranges)
+    search(IpInfoLoader.ip_to_int(ip), all_ranges)
   end
 
   defp search(ip, ranges) do
@@ -102,7 +113,7 @@ defmodule MicrocrawlerWebapp.IpInfo do
     end
   end
 
-  infos = MicrocrawlerWebapp.IpInfoLoader.get_ip_infos(["data", "ip"])
+  infos = IpInfoLoader.get_ip_infos(["data", "ip"])
 
   defp all_ranges do
     unquote(Macro.escape(infos))

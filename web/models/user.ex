@@ -1,7 +1,13 @@
 defmodule MicrocrawlerWebapp.User do
+  @moduledoc """
+  TODO
+  """
 
   use Ecto.Schema
   import Ecto.Changeset
+
+  alias Comeonin.Bcrypt
+  alias Ecto.UUID
 
   schema "user" do
     field :email
@@ -22,10 +28,10 @@ defmodule MicrocrawlerWebapp.User do
   end
 
   def hash_password(user) do
-    %{user | password_hashed: Comeonin.Bcrypt.hashpwsalt(user.password)}
+    %{user | password_hashed: Bcrypt.hashpwsalt(user.password)}
   end
 
   def generate_token(user) do
-    %{user | token: Ecto.UUID.generate}
+    %{user | token: UUID.generate}
   end
 end

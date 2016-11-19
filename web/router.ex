@@ -12,7 +12,8 @@ defmodule MicrocrawlerWebapp.Router do
   pipeline :browser_session do
     plug Guardian.Plug.VerifySession
     plug Guardian.Plug.LoadResource
-    plug Guardian.Plug.EnsureAuthenticated, handler: MicrocrawlerWebapp.SignInController
+    plug Guardian.Plug.EnsureAuthenticated,
+      handler: MicrocrawlerWebapp.SignInController
   end
 
   pipeline :static_layout do
@@ -75,7 +76,7 @@ defmodule MicrocrawlerWebapp.Router do
     # Testing route
     post "/auth/renew_worker_jwt", AuthController, :renew_worker_jwt
     post "/auth/signout", AuthController, :sign_out
-    get  "/auth/user", AuthController, :user
+    get  "/auth/user", AuthController, :user_details
   end
 
   scope "/graphql", MicrocrawlerWebapp do
