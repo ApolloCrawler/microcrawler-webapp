@@ -50,17 +50,10 @@ defmodule MicrocrawlerWebapp.IpInfoLoader do
     end
   end
 
-  defp parse_line([reg, code, "ipv4", ip, count, _date, status | _])
+  defp parse_line([_reg, code, "ipv4", ip, count, _date, _status | _])
   when byte_size(code) == 2 do
     start = ip_to_int(ip)
-    {:ok, {
-      start,
-      start + String.to_integer(count) - 1,
-      code,
-      :ipv4,
-      String.to_atom(status),
-      String.to_atom(reg)
-    }}
+    {:ok, {start, start + String.to_integer(count) - 1, code}}
   end
 
   defp parse_line([_, _, "ipv6" | _]), do: :error
@@ -105,9 +98,9 @@ defmodule MicrocrawlerWebapp.IpInfo do
 
   defp bsearch(ip, ranges, low, high) do
     mid = div(low + high, 2)
-    {start, stop, code, type, status, reg} = elem(ranges, mid)
+    {start, stop, code} = elem(ranges, mid)
     case {ip >= start, ip <= stop} do
-      {true, true}  -> {:ok, {code, type, status, reg}}
+      {true, true}  -> {:ok, code}
       {true, false} -> bsearch(ip, ranges, mid + 1, high)
       {false, true} -> bsearch(ip, ranges, low, mid - 1)
     end
