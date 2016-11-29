@@ -13,6 +13,7 @@ defmodule MicrocrawlerWebapp.IpInfoLoader do
     |> Enum.map(&Path.join(dir ++ [&1]))
     |> Enum.reduce([], &process_file/2)
     |> Enum.sort
+    |> merge
     |> List.to_tuple
     IO.puts "IP files loaded"
     res
@@ -63,6 +64,27 @@ defmodule MicrocrawlerWebapp.IpInfoLoader do
   defp parse_line(line) do
     Logger.debug ~s(UNKNOWN: #{Enum.join(line, "|")})
     :error
+  end
+
+  defp merge([]) do
+    []
+  end
+
+  defp merge([ip | ip_infos]) do
+    Enum.reverse merge(ip_infos, ip, [])
+  end
+
+  defp merge([], last, merged) do
+    [last | merged]
+  end
+
+  defp merge([ip | ip_infos], {last_from, last_to, last_code} = last, merged) do
+    case ip do
+      {from, to, code} when last_to + 1 == from and last_code == code ->
+        merge(ip_infos, {last_from, to, code}, merged)
+      _ ->
+        merge(ip_infos, ip, [last | merged])
+    end
   end
 end
 
