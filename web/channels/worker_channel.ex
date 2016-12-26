@@ -155,7 +155,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
 
   defp country_code(ip) do
     case IpInfo.for(ip) do
-      {:ok, info} -> elem(info, 0)
+      {:ok, info} -> info
       :error      -> ""
     end
   end

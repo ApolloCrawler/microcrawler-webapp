@@ -31,6 +31,12 @@ defmodule MicrocrawlerWebapp.Coordinator do
     GenServer.cast(@name, request(:commited, key, ttl))
   end
 
+  # Resets coordinator clean state as it was after start.
+  # It should be used only in tests to gen fresh instance of coordinator.
+  def reset do
+    GenServer.cast(@name, :reset)
+  end
+
   defp request(type, key, ttl) do
     msg(type: type, ttl: ttl, pid: self, key: key)
   end
@@ -46,13 +52,14 @@ defmodule MicrocrawlerWebapp.Coordinator do
     state |> handle_commited(request) |> noreply
   end
 
-  def handle_info({:DOWN, _ref, :process, pid, reason}, state) do
-    state |> delete_requester(pid, reason) |> accept_next_waiting |> noreply
+  def handle_cast(:reset, state) do
+    demonitor_all(requesters(state))
+    reset_all_waiting(items(state))
+    noreply(state())
   end
 
-  def handle_info(msg, state) do
-    Logger.debug inspect(msg)
-    {:noreply, state}
+  def handle_info({:DOWN, _ref, :process, pid, reason}, state) do
+    state |> delete_requester(pid, reason) |> accept_next_waiting |> noreply
   end
 
   defp handle_requested(state, request, from) do
@@ -61,7 +68,7 @@ defmodule MicrocrawlerWebapp.Coordinator do
         state |> monitor(request) |> put(request) |> accept
       item(type: :requested) = existing ->
         state |> wait(existing, request, from) |> noreply
-      item(type: :commited, ttl: ttl) when ttl > msg(request, :ttl) ->
+      item(type: :commited, ttl: ttl) when ttl >= msg(request, :ttl) ->
         state |> reject
       item(type: :commited) ->
         state |> monitor(request) |> put(request) |> accept
@@ -73,23 +80,27 @@ defmodule MicrocrawlerWebapp.Coordinator do
       nil ->
         # coordinator was probably restarted
         Logger.warn "commiting #{inspect(request)} which is not requested"
+        state |> put(request)
       item(type: :requested, pid: pid, waiting: waiting) = value ->
+        reject_waiting(waiting)
         if pid != msg(request, :pid) do
           # coordinator was probably restarted
           Logger.warn(
             "commiting #{inspect(request)} which is " <>
             "requested by someone else as #{inspect(value)}"
           )
+          state |> demonitor(pid) |> put(request)
+        else
+          state |> demonitor(request) |> put(request)
         end
-        reject_waiting(waiting)
       item(type: :commited) = value ->
         # coordinator was probably restarted
         Logger.warn(
           "commiting #{inspect(request)} which is " <>
           "already commited as #{inspect(value)}"
         )
+        state |> put(request)
     end
-    state |> demonitor(request) |> put(request)
   end
 
   defp is_already_requester(state, pid) do
@@ -111,16 +122,26 @@ defmodule MicrocrawlerWebapp.Coordinator do
     state(state, requesters: Map.put(requesters(state), pid, {key, mon}))
   end
 
-  defp demonitor(state, request) do
-    case Map.pop(requesters(state), msg(request, :pid), :not_found) do
+  defp demonitor(state, msg(pid: pid)) do
+    demonitor(state, pid)
+  end
+
+  defp demonitor(state, pid) do
+    case Map.pop(requesters(state), pid, :not_found) do
       {:not_found, _} ->
         # coordinator was probably restarted
-        Logger.warn "requester #{inspect(request)} not found"
+        Logger.warn "requester #{inspect(pid)} not found"
         state
       {{_key, mon}, other_requesters} ->
         Process.demonitor(mon, [:flush])
         state(state, requesters: other_requesters)
     end
+  end
+
+  defp demonitor_all(requesters) do
+    requesters
+    |> Map.values
+    |> Enum.each(fn({_key, mon}) -> Process.demonitor(mon, [:flush]) end)
   end
 
   defp put(state, request, waiting \\ []) do
@@ -139,8 +160,22 @@ defmodule MicrocrawlerWebapp.Coordinator do
     state(state, items: Map.put(items(state), msg(request, :key), updated))
   end
 
+  defp reset_all_waiting(items) do
+    items
+    |> Map.values
+    |> Enum.each(fn(item(waiting: waiting)) -> reset_waiting(waiting) end)
+  end
+
+  defp reset_waiting(waiting) do
+    reply_waiting(waiting, :reset)
+  end
+
   defp reject_waiting(waiting) do
-    Enum.each(waiting, fn({_, from}) -> GenServer.reply(from, :rejected) end)
+    reply_waiting(waiting, :rejected)
+  end
+
+  defp reply_waiting(waiting, reply) do
+    Enum.each(waiting, fn({_, from}) -> GenServer.reply(from, reply) end)
   end
 
   defp delete_requester(state, pid, reason) do
