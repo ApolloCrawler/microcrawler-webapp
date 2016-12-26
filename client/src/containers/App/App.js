@@ -18,6 +18,7 @@ import config from '../../config';
 import logger from '../../helpers/logger';
 
 import * as authActions from '../../redux/modules/auth';
+import * as socketActions from '../../redux/modules/socket';
 import * as workerActions from '../../redux/modules/workers';
 
 @connect(
@@ -27,6 +28,7 @@ import * as workerActions from '../../redux/modules/workers';
   {
     pushState: push,
     ...authActions,
+    ...socketActions,
     ...workerActions
   }
 )
@@ -38,6 +40,9 @@ export default class App extends Component {
 
     pushState: PropTypes.func.isRequired,
     signOut: PropTypes.func,
+
+    socketSet: PropTypes.func,
+    socketChannelSet: PropTypes.func,
 
     // workersAdd: PropTypes.func,
     workersClean: PropTypes.func,
@@ -55,7 +60,10 @@ export default class App extends Component {
     });
     socket.connect();
 
-    const channel = socket.channel('client:lobby', {});
+    this.props.socketSet(socket);
+
+    const channelName = 'client:lobby';
+    const channel = socket.channel(channelName, {});
     channel.join()
       .receive('error', () => {
         logger.error('Connection error');
@@ -64,6 +72,8 @@ export default class App extends Component {
     channel.on('clear_worker_list', () => {
       this.props.workersClean();
     });
+
+    this.props.socketChannelSet(channelName, channel);
 
     // TODO: Rename to worker_remove
     channel.on('remove_worker', (payload) => {
@@ -111,6 +121,12 @@ export default class App extends Component {
               {this.props.user &&
                 <LinkContainer to="workers">
                   <NavItem>Workers</NavItem>
+                </LinkContainer>
+              }
+
+              {this.props.user &&
+                <LinkContainer to="progress">
+                  <NavItem>Progress</NavItem>
                 </LinkContainer>
               }
             </Nav>

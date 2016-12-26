@@ -1,5 +1,7 @@
 import {generateReduxSymbol} from '../helpers/redux';
 
+const ENQUEUE_URL = generateReduxSymbol('crawlers/ENQUEUE_URL');
+
 const GET_LIST = generateReduxSymbol('crawlers/GET_LIST');
 const GET_LIST_SUCCESS = generateReduxSymbol('crawlers/GET_LIST_SUCCESS');
 const GET_LIST_FAIL = generateReduxSymbol('crawlers/GET_LIST_FAIL');
@@ -23,6 +25,14 @@ export default function reducer(oldState = initialState, action = {}) {
     default:
       return state;
   }
+}
+
+export function enqueueUrl(url, crawler) {
+  return {
+    type: ENQUEUE_URL,
+    url,
+    crawler
+  };
 }
 
 export function crawlersGetList() {

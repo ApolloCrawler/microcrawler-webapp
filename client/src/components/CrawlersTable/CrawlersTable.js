@@ -6,7 +6,8 @@ import {
 
 export default class CrawlersTable extends Component {
   static propTypes = {
-    crawlers: PropTypes.object
+    crawlers: PropTypes.object,
+    enqueueUrl: PropTypes.func,
   };
 
   render() {
@@ -42,7 +43,7 @@ export default class CrawlersTable extends Component {
                       type="button"
                       onClick={
                         () => {
-                          console.log(`Crawling URL: ${crawler.crawler.url}`);
+                          this.props.enqueueUrl(crawler.crawler.url, crawler);
                         }
                       }
                     >Crawl</Button>

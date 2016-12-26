@@ -19,7 +19,8 @@ import * as crawlersActions from '../../redux/modules/crawlers';
 export default class Crawlers extends Component {
   static propTypes = {
     crawlers: PropTypes.object,
-    crawlersGetList: PropTypes.func
+    crawlersGetList: PropTypes.func,
+    enqueueUrl: PropTypes.func
   };
 
   componentDidMount() {
@@ -31,7 +32,7 @@ export default class Crawlers extends Component {
       <div className="container">
         <Helmet title="Crawlers" />
 
-        <CrawlersTable crawlers={this.props.crawlers} />
+        <CrawlersTable crawlers={this.props.crawlers} enqueueUrl={this.props.enqueueUrl} />
       </div>
     );
   }

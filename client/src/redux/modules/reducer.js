@@ -5,6 +5,7 @@ import { reducer as reduxAsyncConnect } from 'redux-connect';
 import auth from './auth';
 import clients from './clients';
 import crawlers from './crawlers';
+import socket from './socket';
 import workers from './workers';
 
 export default combineReducers({
@@ -15,5 +16,6 @@ export default combineReducers({
   auth,
   clients,
   crawlers,
+  socket,
   workers
 });
