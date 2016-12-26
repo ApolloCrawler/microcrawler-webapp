@@ -89,6 +89,22 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
       socket.assigns[:rabb_chan],
       socket.assigns[:rabb_meta].delivery_tag
     )
+
+    # TODO: Process results here
+    # TODO: Store in DB - Result "data"
+    # TODO: Process - Result "url"
+
+    payload
+    |> Enum.filter(fn(res) ->
+      Map.fetch!(res, "type") == "url"
+    end)
+    |> Enum.uniq
+    |> IO.inspect
+    |> Enum.each(fn(res) ->
+      payload = Poison.encode!(res)
+      AMQP.Basic.publish(socket.assigns[:rabb_chan], "", "workq", payload, persistent: true)
+    end)
+
     {:noreply, socket}
   end
 

@@ -1,5 +1,8 @@
 import React, {Component, PropTypes} from 'react';
-import {Table} from 'react-bootstrap';
+import {
+  Button,
+  Table
+} from 'react-bootstrap';
 
 export default class CrawlersTable extends Component {
   static propTypes = {
@@ -20,6 +23,7 @@ export default class CrawlersTable extends Component {
               <th>Description</th>
               <th>Author</th>
               <th>Default URL</th>
+              <th>Actions</th>
             </tr>
           </thead>
 
@@ -31,6 +35,18 @@ export default class CrawlersTable extends Component {
                   <td>{crawler.description}</td>
                   <td>{crawler.author.email}</td>
                   <td><a href={crawler.crawler.url}>{crawler.crawler.url}</a></td>
+                  <td>
+                    <Button
+                      bsStyle="primary"
+                      bsSize="small"
+                      type="button"
+                      onClick={
+                        () => {
+                          console.log(`Crawling URL: ${crawler.crawler.url}`);
+                        }
+                      }
+                    >Crawl</Button>
+                  </td>
                 </tr>
               );
             })}

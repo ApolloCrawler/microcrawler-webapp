@@ -36,7 +36,7 @@ export default class Profile extends Component {
                 this.props.renewWorkerJWT();
               }
             }
-          >Renew </Button>
+          >Renew</Button>
         </div>
       </div>
     );
