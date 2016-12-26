@@ -59,6 +59,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:poison, "~> 2.2.0", override: true},
       {:poolboy, "~> 1.5.1", override: true},
+      { :uuid, "~> 1.1" },
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:amqp_client, git: "https://github.com/jbrisbin/amqp_client.git", override: true},

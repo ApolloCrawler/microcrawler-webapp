@@ -7,20 +7,22 @@ import {connect} from 'react-redux';
 import CrawlersTable from '../../components/CrawlersTable';
 
 import * as crawlersActions from '../../redux/modules/crawlers';
+import * as socketActions from '../../redux/modules/socket';
 
 @connect(
   (state) => ({
     crawlers: state.crawlers
   }),
   {
-    ...crawlersActions
+    ...crawlersActions,
+    ...socketActions
   }
 )
 export default class Crawlers extends Component {
   static propTypes = {
     crawlers: PropTypes.object,
     crawlersGetList: PropTypes.func,
-    enqueueUrl: PropTypes.func
+    socketMessageSend: PropTypes.func
   };
 
   componentDidMount() {
@@ -32,7 +34,19 @@ export default class Crawlers extends Component {
       <div className="container">
         <Helmet title="Crawlers" />
 
-        <CrawlersTable crawlers={this.props.crawlers} enqueueUrl={this.props.enqueueUrl} />
+        <CrawlersTable
+          crawlers={this.props.crawlers}
+          enqueueUrl={
+            (url, crawler) => {
+              console.log(url, crawler);
+              const msg = {
+                crawler: `${crawler.name}/index`,
+                url
+              };
+              this.props.socketMessageSend('client:lobby', 'enqueue', msg);
+            }
+          }
+        />
       </div>
     );
   }

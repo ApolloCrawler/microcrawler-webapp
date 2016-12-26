@@ -10,6 +10,11 @@ defmodule MicrocrawlerWebapp.ClientChannel do
   alias MicrocrawlerWebapp.ActiveWorkers
   alias MicrocrawlerWebapp.Endpoint
 
+  alias AMQP.Connection
+  alias AMQP.Channel
+  # alias AMQP.Queue
+  alias AMQP.Basic
+
   def clear_worker_list do
     Endpoint.broadcast("client:lobby", "clear_worker_list", %{})
   end
@@ -27,6 +32,17 @@ defmodule MicrocrawlerWebapp.ClientChannel do
     Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
     Logger.debug inspect(self)
 
+    amqp_username = Application.fetch_env!(:amqp, :username)
+    amqp_password = Application.fetch_env!(:amqp, :password)
+    amqp_hostname = Application.fetch_env!(:amqp, :hostname)
+    amqp_uri = "amqp://#{amqp_username}:#{amqp_password}@#{amqp_hostname}"
+
+    {:ok, conn} = Connection.open(amqp_uri)
+    {:ok, chan} = Channel.open(conn)
+
+    socket = assign(socket, :rabb_conn, conn)
+    socket = assign(socket, :rabb_chan, chan)
+
     send(self, :send_joined_workers)
 
     {:ok, %{msg: "Welcome!"}, socket}
@@ -34,6 +50,14 @@ defmodule MicrocrawlerWebapp.ClientChannel do
 
   def join("client:" <> _private_room_id, _params, _socket) do
     {:error, %{reason: "unauthorized"}}
+  end
+
+  def handle_in("enqueue", payload, socket) do
+    Logger.debug "Received event - enqueue"
+
+    AMQP.Basic.publish(socket.assigns[:rabb_chan], "", "workq", Poison.encode!(payload), persistent: true)
+
+    {:noreply, socket}
   end
 
   def handle_info(:send_joined_workers, socket) do

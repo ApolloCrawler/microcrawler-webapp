@@ -9,6 +9,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
 
   alias MicrocrawlerWebapp.ActiveWorkers
   alias MicrocrawlerWebapp.Endpoint
+
   alias AMQP.Connection
   alias AMQP.Channel
   alias AMQP.Queue
