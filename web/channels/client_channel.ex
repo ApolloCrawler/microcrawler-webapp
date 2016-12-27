@@ -55,7 +55,15 @@ defmodule MicrocrawlerWebapp.ClientChannel do
   def handle_in("enqueue", payload, socket) do
     Logger.debug "Received event - enqueue"
 
-    AMQP.Basic.publish(socket.assigns[:rabb_chan], "", "workq", Poison.encode!(payload), persistent: true)
+    key = "url-#{Map.fetch!(payload, "crawler")}-#{Map.fetch!(payload, "url")}"
+    key_hash = Base.encode16(:crypto.hash(:sha256, key))
+
+    case MicrocrawlerWebapp.Couchbase.get(key_hash) do
+      %{"error" => "The key does not exist on the server"} ->
+        MicrocrawlerWebapp.Couchbase.upsert(key_hash, Map.put_new(payload, "type", "url"))
+        AMQP.Basic.publish(socket.assigns[:rabb_chan], "", "workq", Poison.encode!(payload), persistent: true)
+      res -> nil
+    end
 
     {:noreply, socket}
   end

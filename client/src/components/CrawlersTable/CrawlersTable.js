@@ -34,8 +34,14 @@ export default class CrawlersTable extends Component {
                 <tr key={crawler.name}>
                   <td>{crawler.name}</td>
                   <td>{crawler.description}</td>
-                  <td>{crawler.author.email}</td>
-                  <td><a href={crawler.crawler.url}>{crawler.crawler.url}</a></td>
+                  <td>
+                    <a href={`mailto:${crawler.author.email}?subject="Microcrawler"`}>{crawler.author.email}</a>
+                  </td>
+                  <td>
+                    <a href={crawler.crawler.url} target="_blank" rel="noopener noreferrer">
+                      {crawler.crawler.url}
+                    </a>
+                  </td>
                   <td>
                     <Button
                       bsStyle="primary"
