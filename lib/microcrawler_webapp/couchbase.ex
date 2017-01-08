@@ -137,7 +137,7 @@ defmodule MicrocrawlerWebapp.Couchbase do
           {:ok, res} ->
             res
           err ->
-            IO.inspect(err)
+            Logger.debug(inspect(err))
             nil
         end
     end

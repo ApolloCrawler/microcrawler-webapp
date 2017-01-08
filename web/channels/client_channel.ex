@@ -8,11 +8,12 @@ defmodule MicrocrawlerWebapp.ClientChannel do
   require Logger
 
   alias MicrocrawlerWebapp.ActiveWorkers
+  alias MicrocrawlerWebapp.Couchbase
   alias MicrocrawlerWebapp.Endpoint
 
+  alias AMQP.Basic
   alias AMQP.Connection
   alias AMQP.Channel
-  # alias AMQP.Queue
   alias AMQP.Basic
 
   def clear_worker_list do
@@ -30,7 +31,7 @@ defmodule MicrocrawlerWebapp.ClientChannel do
   def join("client:lobby", payload, socket) do
     Logger.debug "Received join - client:lobby"
     Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
-    Logger.debug inspect(self)
+    Logger.debug inspect(self())
 
     amqp_username = Application.fetch_env!(:amqp, :username)
     amqp_password = Application.fetch_env!(:amqp, :password)
@@ -43,7 +44,7 @@ defmodule MicrocrawlerWebapp.ClientChannel do
     socket = assign(socket, :rabb_conn, conn)
     socket = assign(socket, :rabb_chan, chan)
 
-    send(self, :send_joined_workers)
+    send(self(), :send_joined_workers)
 
     {:ok, %{msg: "Welcome!"}, socket}
   end
@@ -58,10 +59,12 @@ defmodule MicrocrawlerWebapp.ClientChannel do
     key = "url-#{Map.fetch!(payload, "crawler")}-#{Map.fetch!(payload, "url")}"
     key_hash = Base.encode16(:crypto.hash(:sha256, key))
 
-    case MicrocrawlerWebapp.Couchbase.get(key_hash) do
+    case Couchbase.get(key_hash) do
       %{"error" => "The key does not exist on the server"} ->
-        MicrocrawlerWebapp.Couchbase.upsert(key_hash, Map.put_new(payload, "type", "url"))
-        AMQP.Basic.publish(socket.assigns[:rabb_chan], "", "workq", Poison.encode!(payload), persistent: true)
+        Couchbase.upsert(key_hash, Map.put_new(payload, "type", "url"))
+        channel = socket.assigns[:rabb_chan]
+        payload = Poison.encode!(payload)
+        Basic.publish(channel, "", "workq", payload, persistent: true)
       res -> nil
     end
 
@@ -78,14 +81,14 @@ defmodule MicrocrawlerWebapp.ClientChannel do
 
   def handle_info(msg, socket) do
     Logger.debug inspect(msg)
-    Logger.debug inspect(self)
+    Logger.debug inspect(self())
 
     {:noreply, socket}
   end
 
   def terminate(reason, socket) do
     Logger.debug inspect(reason)
-    Logger.debug inspect(self)
+    Logger.debug inspect(self())
     Logger.debug inspect(socket)
     :ok
   end
