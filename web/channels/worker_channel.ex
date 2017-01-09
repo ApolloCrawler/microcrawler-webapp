@@ -9,6 +9,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
 
   alias MicrocrawlerWebapp.ActiveWorkers
   alias MicrocrawlerWebapp.Endpoint
+
   alias AMQP.Connection
   alias AMQP.Channel
   alias AMQP.Queue
@@ -89,6 +90,48 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
       socket.assigns[:rabb_chan],
       socket.assigns[:rabb_meta].delivery_tag
     )
+
+    # TODO: Process results here
+    # TODO: Store in DB - Result "data"
+    # TODO: Process - Result "url"
+
+    payload
+    |> Enum.filter(fn(res) ->
+      Map.fetch!(res, "type") == "url"
+    end)
+    |> Enum.uniq
+    |> IO.inspect
+    |> Enum.each(fn(res) ->
+      # TODO: Use key "crawler" instead of "processor"
+      key = "url-#{Map.fetch!(res, "processor")}-#{Map.fetch!(res, "url")}"
+      key_hash = Base.encode16(:crypto.hash(:sha256, key))
+
+      case MicrocrawlerWebapp.Couchbase.get(key_hash) do
+        %{"error" => "The key does not exist on the server"} ->
+          MicrocrawlerWebapp.Couchbase.upsert(key_hash, Map.put_new(res, "type", "url"))
+          payload = Poison.encode!(res)
+          AMQP.Basic.publish(socket.assigns[:rabb_chan], "", "workq", payload, persistent: true)
+        res -> nil
+      end
+    end)
+
+    payload
+    |> Enum.filter(fn(res) ->
+      Map.fetch!(res, "type") == "data"
+    end)
+    |> Enum.uniq
+    |> IO.inspect
+    |> Enum.each(fn(res) ->
+      key = "data-#{Poison.encode!(res)}"
+      key_hash = Base.encode16(:crypto.hash(:sha256, key))
+
+      case MicrocrawlerWebapp.Couchbase.get(key_hash) do
+        %{"error" => "The key does not exist on the server"} ->
+          MicrocrawlerWebapp.Couchbase.upsert(key_hash, res)
+        res -> nil
+      end
+    end)
+
     {:noreply, socket}
   end
 

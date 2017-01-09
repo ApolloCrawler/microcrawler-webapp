@@ -50,6 +50,7 @@ defmodule MicrocrawlerWebapp.Couchbase do
           {:ok, res} ->
             res
           {:err} -> nil
+          {:error, :invalid} -> nil
         end
     end
   end
@@ -135,7 +136,9 @@ defmodule MicrocrawlerWebapp.Couchbase do
         case Poison.decode(res.body) do
           {:ok, res} ->
             res
-          _ -> nil
+          err ->
+            IO.inspect(err)
+            nil
         end
     end
   end
@@ -143,7 +146,7 @@ defmodule MicrocrawlerWebapp.Couchbase do
   def upsert_raw(id, doc) do
     Logger.debug("MicrocrawlerWebapp.Couchbase.upsert_raw(#{inspect(id)})")
     case Poison.encode(doc) do
-      {:ok, json} -> HTTPoison.post "#{url_doc_id(id)}/upsert", json
+      {:ok, json} -> HTTPoison.post("#{url_doc_id(id)}/upsert", json)
     end
   end
 

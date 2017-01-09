@@ -1,9 +1,13 @@
 import React, {Component, PropTypes} from 'react';
-import {Table} from 'react-bootstrap';
+import {
+  Button,
+  Table
+} from 'react-bootstrap';
 
 export default class CrawlersTable extends Component {
   static propTypes = {
-    crawlers: PropTypes.object
+    crawlers: PropTypes.object,
+    enqueueUrl: PropTypes.func,
   };
 
   render() {
@@ -20,6 +24,7 @@ export default class CrawlersTable extends Component {
               <th>Description</th>
               <th>Author</th>
               <th>Default URL</th>
+              <th>Actions</th>
             </tr>
           </thead>
 
@@ -29,8 +34,26 @@ export default class CrawlersTable extends Component {
                 <tr key={crawler.name}>
                   <td>{crawler.name}</td>
                   <td>{crawler.description}</td>
-                  <td>{crawler.author.email}</td>
-                  <td><a href={crawler.crawler.url}>{crawler.crawler.url}</a></td>
+                  <td>
+                    <a href={`mailto:${crawler.author.email}?subject="Microcrawler"`}>{crawler.author.email}</a>
+                  </td>
+                  <td>
+                    <a href={crawler.crawler.url} target="_blank" rel="noopener noreferrer">
+                      {crawler.crawler.url}
+                    </a>
+                  </td>
+                  <td>
+                    <Button
+                      bsStyle="primary"
+                      bsSize="small"
+                      type="button"
+                      onClick={
+                        () => {
+                          this.props.enqueueUrl(crawler.crawler.url, crawler);
+                        }
+                      }
+                    >Crawl</Button>
+                  </td>
                 </tr>
               );
             })}

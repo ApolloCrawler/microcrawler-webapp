@@ -8,6 +8,7 @@ import Crawlers from './containers/Crawlers';
 import Intro from './containers/Intro';
 import NotFound from './containers/NotFound';
 import Profile from './containers/Profile';
+import Progress from './containers/Progress';
 import SignIn from './containers/SignIn';
 import SignUp from './containers/SignUp';
 import Workers from './containers/Workers';
@@ -40,6 +41,7 @@ export default (/* store */) => {
       <Route path="clients" component={Clients}/>
       <Route path="crawlers" component={Crawlers}/>
       <Route path="intro" component={Intro}/>
+      <Route path="progress" component={Progress}/>
       <Route path="profile" component={Profile}/>
       <Route path="signin" component={SignIn}/>
       <Route path="signup" component={SignUp}/>
