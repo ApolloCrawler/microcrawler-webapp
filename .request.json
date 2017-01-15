@@ -1,0 +1,31 @@
+{
+  "version": "0.0.1",
+  "timestamp": 1483923863184,
+  "request": {
+    "uuid": "f32df195-9d46-4fb2-9799-82e19fc7cae2",
+    "url": "http://xkcd.com",
+    "crawler": "xkcd.com/index"
+  },
+  "options": {
+    "ttl": null
+  },
+  "results": [
+    {
+      "type": "data",
+      "data": {
+        "firstname": "tomas",
+        "lastname": "korcak"
+      },
+      "options": {
+        "ttl": 100
+      }
+    },
+    {
+      "type": "url",
+      "url": {
+        "url": "http://xkcd.com/1732",
+        "crawler": "xkcd.com/index"
+      }
+    }
+  ]
+}

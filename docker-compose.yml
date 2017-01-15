@@ -1,7 +1,7 @@
 version: '2'
 services:
   elasticsearch:
-    image: korczis/elasticsearch:2.4.0-couchbase
+    image: korczis/elasticsearch:5.1.1-couchbase
     ports:
       - "9091:9091"
       - "9200:9200"
@@ -50,4 +50,13 @@ services:
       - "-r"
     depends_on:
       - couchbase
+    restart: always
+  kibana:
+    image: korczis/kibana
+    environment:
+      ELASTICSEARCH_URL: "http://elastic:changeme@elasticsearch:9200"
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
     restart: unless-stopped

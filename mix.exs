@@ -20,6 +20,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
     [mod: {MicrocrawlerWebapp, []},
       # TODO: Try to keep in
       applications: [
+        :elastix,
         :graphql,
         :phoenix,
         # :phoenix_pubsub_rabbitmq,
@@ -48,6 +49,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
       {:comeonin, "~> 2.3"},
       {:credo, "~> 0.4", only: [:dev, :test]},
       {:dialyxir, "~> 0.3.5", only: [:dev]},
+      {:elastix, "~> 0.2.0"},
       {:graphql, "~> 0.3"},
       {:guardian, "~> 0.13.0"},
       {:httpoison, "~> 0.9.2"},
@@ -59,7 +61,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:poison, "~> 2.2.0", override: true},
       {:poolboy, "~> 1.5.1", override: true},
-      { :uuid, "~> 1.1" },
+      {:uuid, "~> 1.1" },
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:amqp_client, git: "https://github.com/jbrisbin/amqp_client.git", override: true},

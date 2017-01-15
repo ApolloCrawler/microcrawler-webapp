@@ -9,6 +9,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
 
   alias MicrocrawlerWebapp.ActiveWorkers
   alias MicrocrawlerWebapp.Couchbase
+  alias MicrocrawlerWebapp.Elasticsearch
   alias MicrocrawlerWebapp.Endpoint
 
   alias AMQP.Basic
@@ -25,10 +26,10 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
   def join("worker:lobby", worker_info, socket) do
     Logger.debug "Received join - worker:lobby"
     Logger.debug Poison.encode_to_iodata!(worker_info, pretty: true)
-    Logger.debug inspect(self)
+    Logger.debug inspect(self())
 
     socket = save_worker_info(socket, worker_info)
-    send(self, :after_join)
+    send(self(), :after_join)
 
     amqp_username = Application.fetch_env!(:amqp, :username)
     amqp_password = Application.fetch_env!(:amqp, :password)
@@ -69,7 +70,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
 
   def handle_info(msg, socket) do
     Logger.debug inspect(msg)
-    Logger.debug inspect(self)
+    Logger.debug inspect(self())
     # IO.inspect socket
     {:noreply, socket}
   end
@@ -93,12 +94,17 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
       socket.assigns[:rabb_meta].delivery_tag
     )
 
-    payload
+    request = payload
+    |> Map.get("request")
+    |> Map.delete("type")
+    results = Map.get(payload, "results")
+
+    results
     |> Enum.filter(fn(res) ->
       Map.fetch!(res, "type") == "url"
     end)
     |> Enum.uniq
-    |> Logger.debug
+    # |> Logger.debug
     |> Enum.each(fn(res) ->
       # TODO: Use key 'crawler' instead of 'processor'
       key = "url-#{Map.fetch!(res, "processor")}-#{Map.fetch!(res, "url")}"
@@ -106,28 +112,36 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
 
       case Couchbase.get(key_hash) do
         %{"error" => "The key does not exist on the server"} ->
-          Couchbase.upsert(key_hash, Map.put_new(res, "type", "url"))
+          new_doc = res
+          # |> Map.put_new("type", "url")
+          |> Map.put_new("uuid", UUID.uuid4())
+          Couchbase.set(key_hash, new_doc)
+          Elasticsearch.index(key_hash, new_doc)
           channel = socket.assigns[:rabb_chan]
           payload = Poison.encode!(res)
           Basic.publish(channel, "", "workq", payload, persistent: true)
-        res -> nil
+        _ -> nil
       end
     end)
 
-    payload
+    results
     |> Enum.filter(fn(res) ->
       Map.fetch!(res, "type") == "data"
     end)
     |> Enum.uniq
-    |> Logger.debug
+    # |> Logger.debug
     |> Enum.each(fn(res) ->
       key = "data-#{Poison.encode!(res)}"
       key_hash = Base.encode16(:crypto.hash(:sha256, key))
 
       case Couchbase.get(key_hash) do
         %{"error" => "The key does not exist on the server"} ->
-          Couchbase.upsert(key_hash, res)
-        res -> nil
+          new_doc = res
+          # |> Map.put_new("type", "url")
+          |> Map.put_new("request", request)
+          Couchbase.set(key_hash, new_doc)
+          Elasticsearch.index(key_hash, new_doc)
+        _ -> nil
       end
     end)
 
@@ -151,7 +165,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
 
   def terminate(reason, socket) do
     Logger.debug inspect(reason)
-    Logger.debug inspect(self)
+    Logger.debug inspect(self())
     Logger.debug inspect(socket)
     Connection.close(socket.assigns[:rabb_conn])
     :ok

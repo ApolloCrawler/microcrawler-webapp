@@ -53,19 +53,21 @@ defmodule MicrocrawlerWebapp.ClientChannel do
     {:error, %{reason: "unauthorized"}}
   end
 
-  def handle_in("enqueue", payload, socket) do
+  def handle_in("enqueue", payload_in, socket) do
     Logger.debug "Received event - enqueue"
+
+    payload = Map.put_new(payload_in, "uuid", UUID.uuid4())
 
     key = "url-#{Map.fetch!(payload, "crawler")}-#{Map.fetch!(payload, "url")}"
     key_hash = Base.encode16(:crypto.hash(:sha256, key))
 
     case Couchbase.get(key_hash) do
       %{"error" => "The key does not exist on the server"} ->
-        Couchbase.upsert(key_hash, Map.put_new(payload, "type", "url"))
+        Couchbase.set(key_hash, Map.put_new(payload, "type", "url"))
         channel = socket.assigns[:rabb_chan]
         payload = Poison.encode!(payload)
         Basic.publish(channel, "", "workq", payload, persistent: true)
-      res -> nil
+      _ -> nil
     end
 
     {:noreply, socket}

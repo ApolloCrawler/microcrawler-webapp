@@ -52,3 +52,8 @@ config :microcrawler_webapp, MicrocrawlerWebapp.Repo,
 config :microcrawler_webapp, MicrocrawlerWebapp.Couchbase,
   url: "http://localhost:5000",
   bucket: "default"
+
+config :microcrawler_webapp, MicrocrawlerWebapp.Elasticsearch,
+  url: "http://elastic:changeme@localhost:9200",
+  index: "default",
+  doc_type: "default"

@@ -17,6 +17,16 @@ Microcrawler Web Application written in Elixir / Phoenix
 - [nodejs / npm](https://nodejs.org/en/)
 - [PostgreSQL](https://www.postgresql.org/)
 
+### Optional
+
+- [docker](https://www.docker.com/)
+
+## Required Services
+
+- couchbase
+- elasticsearch
+- postgres
+
 ## Getting Started
 
 To start your Phoenix app:
