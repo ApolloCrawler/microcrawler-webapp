@@ -56,14 +56,17 @@ defmodule MicrocrawlerWebapp.ClientChannel do
   def handle_in("enqueue", payload_in, socket) do
     Logger.debug "Received event - enqueue"
 
-    payload = Map.put_new(payload_in, "uuid", UUID.uuid4())
+    payload = payload_in
+    |> Map.put_new("uuid", UUID.uuid4())
+    |> Map.put_new("type", "url")
+    |> Map.put("crawler", String.replace(Map.get(payload_in, "crawler"), "microcrawler-crawler-", ""))
 
     key = "url-#{Map.fetch!(payload, "crawler")}-#{Map.fetch!(payload, "url")}"
     key_hash = Base.encode16(:crypto.hash(:sha256, key))
 
     case Couchbase.get(key_hash) do
       %{"error" => "The key does not exist on the server"} ->
-        Couchbase.set(key_hash, Map.put_new(payload, "type", "url"))
+        Couchbase.set(key_hash, payload)
         channel = socket.assigns[:rabb_chan]
         payload = Poison.encode!(payload)
         Basic.publish(channel, "", "workq", payload, persistent: true)
