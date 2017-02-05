@@ -40,15 +40,6 @@ config :amqp,
   vhost: System.get_env("AMQP_VHOST") || "/",
   hostname: System.get_env("AMQP_HOSTNAME") || "localhost"
 
-# Configure your database
-config :microcrawler_webapp, MicrocrawlerWebapp.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: System.get_env("POSTGRES_USERNAME") || "postgres",
-  password: System.get_env("POSTGRES_PASSWORD") || "postgres",
-  database: System.get_env("POSTGRES_DATABASE") || "microcrawler_webapp_dev",
-  hostname: System.get_env("POSTGRES_HOSTNAME") || "localhost",
-  pool_size: 10
-
 config :microcrawler_webapp, MicrocrawlerWebapp.Couchbase,
   url: "http://localhost:5000",
   bucket: "default"

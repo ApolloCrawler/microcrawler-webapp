@@ -24,13 +24,6 @@ services:
     ulimits:
       core: 100000000
       memlock: 100000000
-  postgres:
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-    ports:
-      - "5432:5432"
   rabbitmq:
     image: rabbitmq:3-management
     ports:

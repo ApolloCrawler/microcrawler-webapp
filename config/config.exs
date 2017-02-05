@@ -13,10 +13,6 @@ config :guardian, Guardian,
   secret_key: "not so secret key",
   serializer: MicrocrawlerWebapp.GuardianSerializer
 
-# General application configuration
-config :microcrawler_webapp,
-  ecto_repos: [MicrocrawlerWebapp.Repo]
-
 # Configures the endpoint
 config :microcrawler_webapp, MicrocrawlerWebapp.Endpoint,
   url: [host: "localhost"],

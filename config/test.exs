@@ -8,12 +8,3 @@ config :microcrawler_webapp, MicrocrawlerWebapp.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
-
-# Configure your database
-config :microcrawler_webapp, MicrocrawlerWebapp.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "microcrawler_webapp_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox

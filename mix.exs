@@ -30,7 +30,6 @@ defmodule MicrocrawlerWebapp.Mixfile do
         :logger,
         :gettext,
         :phoenix_ecto,
-        :postgrex,
         :amqp,
         :httpoison
       ]
@@ -56,7 +55,6 @@ defmodule MicrocrawlerWebapp.Mixfile do
       {:phoenix, "~> 1.2.1", override: true},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.6"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:poison, "~> 2.2.0", override: true},
