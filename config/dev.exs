@@ -41,10 +41,10 @@ config :amqp,
   hostname: System.get_env("AMQP_HOSTNAME") || "localhost"
 
 config :microcrawler_webapp, MicrocrawlerWebapp.Couchbase,
-  url: "http://localhost:5000",
-  bucket: "default"
+  url: System.get_env("GAUC_URL") || "http://localhost:5000",
+  bucket: System.get_env("GAUC_BUCKET") || "default"
 
 config :microcrawler_webapp, MicrocrawlerWebapp.Elasticsearch,
-  url: "http://elastic:changeme@localhost:9200",
-  index: "default",
-  doc_type: "default"
+  url: System.get_env("ELASTIC_URL") || "http://elastic:changeme@localhost:9200",
+  index: System.get_env("ELASTIC_INDEX") || "default",
+  doc_type: System.get_env("ELASTIC_DOC_TYPE") || "default"
