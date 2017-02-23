@@ -1,7 +1,7 @@
 version: '2'
 services:
   elasticsearch:
-    image: korczis/elasticsearch:5.2.1
+    image: korczis/elasticsearch:5.2.1-couchbase
     ports:
       - "9091:9091"
       - "9200:9200"
