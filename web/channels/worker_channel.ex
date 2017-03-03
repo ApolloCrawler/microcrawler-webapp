@@ -104,6 +104,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
       Map.fetch!(res, "type") == "url"
     end)
     |> Enum.uniq
+    |> Enum.shuffle
     # |> Logger.debug
     |> Enum.each(fn(res) ->
       # TODO: Use key 'crawler' instead of 'processor'
