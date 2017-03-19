@@ -10,11 +10,7 @@ defmodule MicrocrawlerWebapp.ClientChannel do
   alias MicrocrawlerWebapp.ActiveWorkers
   alias MicrocrawlerWebapp.Couchbase
   alias MicrocrawlerWebapp.Endpoint
-
-  alias AMQP.Basic
-  alias AMQP.Connection
-  alias AMQP.Channel
-  alias AMQP.Basic
+  alias MicrocrawlerWebapp.WorkQueue
 
   def clear_worker_list do
     Endpoint.broadcast("client:lobby", "clear_worker_list", %{})
@@ -32,17 +28,6 @@ defmodule MicrocrawlerWebapp.ClientChannel do
     Logger.debug "Received join - client:lobby"
     Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
     Logger.debug inspect(self())
-
-    amqp_username = Application.fetch_env!(:amqp, :username)
-    amqp_password = Application.fetch_env!(:amqp, :password)
-    amqp_hostname = Application.fetch_env!(:amqp, :hostname)
-    amqp_uri = "amqp://#{amqp_username}:#{amqp_password}@#{amqp_hostname}"
-
-    {:ok, conn} = Connection.open(amqp_uri)
-    {:ok, chan} = Channel.open(conn)
-
-    socket = assign(socket, :rabb_conn, conn)
-    socket = assign(socket, :rabb_chan, chan)
 
     send(self(), :send_joined_workers)
 
@@ -67,9 +52,10 @@ defmodule MicrocrawlerWebapp.ClientChannel do
     case Couchbase.get(key_hash) do
       %{"error" => "The key does not exist on the server"} ->
         Couchbase.set(key_hash, payload)
-        channel = socket.assigns[:rabb_chan]
         payload = Poison.encode!(payload)
-        Basic.publish(channel, "", "workq", payload, persistent: true)
+        WorkQueue.open!
+        |> WorkQueue.publish!(payload)
+        |> WorkQueue.close
       _ -> nil
     end
 
