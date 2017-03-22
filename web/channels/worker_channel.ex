@@ -11,19 +11,15 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
   alias MicrocrawlerWebapp.Couchbase
   alias MicrocrawlerWebapp.Elasticsearch
   alias MicrocrawlerWebapp.Endpoint
-
-  alias AMQP.Basic
-  alias AMQP.Connection
-  alias AMQP.Channel
-  alias AMQP.Queue
-  alias AMQP.Basic
   alias MicrocrawlerWebapp.IpInfo
+  alias MicrocrawlerWebapp.WorkQueue
 
   def send_joined_workers_info() do
     Endpoint.broadcast("worker:lobby", "send_worker_info", %{})
   end
 
   def join("worker:lobby", worker_info, socket) do
+    false = Process.flag(:trap_exit, true)
     Logger.debug "Received join - worker:lobby"
     Logger.debug Poison.encode_to_iodata!(worker_info, pretty: true)
     Logger.debug inspect(self())
@@ -31,24 +27,6 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     socket = save_worker_info(socket, worker_info)
     send(self(), :after_join)
 
-    amqp_username = Application.fetch_env!(:amqp, :username)
-    amqp_password = Application.fetch_env!(:amqp, :password)
-    amqp_hostname = Application.fetch_env!(:amqp, :hostname)
-    amqp_uri = "amqp://#{amqp_username}:#{amqp_password}@#{amqp_hostname}"
-
-    {:ok, conn} = Connection.open(amqp_uri)
-    {:ok, chan} = Channel.open(conn)
-
-    socket = assign(socket, :rabb_conn, conn)
-    socket = assign(socket, :rabb_chan, chan)
-
-    Queue.declare(chan, "workq", durable: true)
-    Basic.qos(chan, prefetch_count: 1)
-    Basic.consume(chan, "workq", nil)
-
-    # TODO:
-    # - nejak je potreba resit, kdyz conn spadne a take obracene,
-    #   ze by link na conn?
     {:ok, %{msg: "Welcome!"}, socket}
   end
 
@@ -58,6 +36,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
 
   def handle_info(:after_join, socket) do
     socket
+    |> consume_work_queue
     |> send_worker_info
     |> noreply
   end
@@ -68,11 +47,26 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     {:noreply, assign(socket, :rabb_meta, meta)}
   end
 
-  def handle_info(msg, socket) do
-    Logger.debug inspect(msg)
-    Logger.debug inspect(self())
-    # IO.inspect socket
+  def handle_info({:basic_consume_ok, some_map}, socket) do
+    Logger.debug "Rabbit consume ok: #{inspect(some_map)}"
     {:noreply, socket}
+  end
+
+  def handle_info(:retry_consume, socket) do
+    socket
+    |> consume_work_queue
+    |> noreply
+  end
+
+  def handle_info({:EXIT, pid, reason} = msg, socket) do
+    if socket.assigns.work_queue.conn.pid == pid do
+      Logger.debug "Rabbit conn closed #{inspect(reason)}"
+      {:stop, {:rabbit_conn_closed, reason}, socket}
+    else
+      Logger.debug inspect(msg)
+      Logger.debug inspect(self())
+      {:stop, {:unknown_exit, msg}, socket}
+    end
   end
 
   def handle_in("ping", payload, socket) do
@@ -89,10 +83,6 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
   def handle_in("done", payload, socket) do
     Logger.debug "Received event - done"
     Logger.debug Poison.encode_to_iodata!(payload, pretty: true)
-    Basic.ack(
-      socket.assigns[:rabb_chan],
-      socket.assigns[:rabb_meta].delivery_tag
-    )
 
     request = payload
     |> Map.get("request")
@@ -118,9 +108,8 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
           |> Map.put_new("uuid", UUID.uuid4())
           Couchbase.set(key_hash, new_doc)
           Elasticsearch.index(key_hash, new_doc)
-          channel = socket.assigns[:rabb_chan]
           payload = Poison.encode!(res)
-          Basic.publish(channel, "", "workq", payload, persistent: true)
+          WorkQueue.publish!(socket.assigns[:work_queue], payload)
         _ -> nil
       end
     end)
@@ -146,6 +135,8 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
       end
     end)
 
+    WorkQueue.ack!(socket.assigns[:work_queue], socket.assigns[:rabb_meta])
+
     {:noreply, socket}
   end
 
@@ -168,7 +159,9 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     Logger.debug inspect(reason)
     Logger.debug inspect(self())
     Logger.debug inspect(socket)
-    Connection.close(socket.assigns[:rabb_conn])
+    if Map.has_key?(socket.assigns, :work_queue) do
+      WorkQueue.close(socket.assigns[:work_queue])
+    end
     :ok
   end
 
@@ -186,6 +179,19 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
     worker_info
     |> Map.put(:remote_ip, remote_ip(remote_ip))
     |> Map.put(:country_code, country_code(remote_ip))
+  end
+
+  defp consume_work_queue(socket) do
+    with {:ok, work_queue} <- WorkQueue.open,
+         {:ok, _consumer_tag} = WorkQueue.consume(work_queue)
+    do
+      assign(socket, :work_queue, work_queue)
+    else
+      error ->
+        Logger.error "Rabbit conn failed: #{inspect(error)}"
+        Process.send_after(self(), :retry_consume, 5000)
+        socket
+    end
   end
 
   defp remote_ip(ip) do
