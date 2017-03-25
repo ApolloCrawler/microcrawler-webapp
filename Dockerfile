@@ -52,7 +52,9 @@ RUN export NVM_DIR="/root/.nvm" \
   && nvm install 6.6.0 \
   && npm install
 
-RUN mix compile
+RUN mix compile \
+  && MIX_ENV=prod mix compile \
+  && MIX_ENV=prod mix phoenix.digest
 
 ADD .docker/start.sh /start.sh
 
