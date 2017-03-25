@@ -17,7 +17,7 @@ defmodule MicrocrawlerWebapp.Coordinator do
 
   Record.defrecord :state, [items: %{}, requesters: %{}]
 
-  def start_link() do
+  def start_link do
     GenServer.start_link(@name, state(), name: @name)
   end
 

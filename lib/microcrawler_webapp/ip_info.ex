@@ -92,7 +92,6 @@ defmodule MicrocrawlerWebapp.IpInfo do
   @moduledoc """
   TODO
   """
-
   require MicrocrawlerWebapp.IpInfoLoader
 
   alias MicrocrawlerWebapp.IpInfoLoader
@@ -134,4 +133,3 @@ defmodule MicrocrawlerWebapp.IpInfo do
     unquote(Macro.escape(infos))
   end
 end
-
