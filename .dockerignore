@@ -6,6 +6,8 @@ lib-cov
 *.pid
 *.gz
 
+_build/
+
 users.dets
 
 .git
