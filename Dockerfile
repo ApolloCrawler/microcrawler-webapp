@@ -6,6 +6,7 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
+ENV MIX_ENV prod
 
 RUN apt-get update \
   && apt-get install -y \
@@ -26,7 +27,7 @@ RUN apt-get update \
   && apt-get dist-upgrade -y
 
 # Install nvm
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh | bash
 
 # Switch to directory with sources
 WORKDIR /src
@@ -38,7 +39,12 @@ RUN wget http://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb -P /r
 RUN dpkg -i /root/erlang-solutions_1.0_all.deb
 RUN rm /root/erlang-solutions_1.0_all.deb
 
-RUN apt-get update && apt-get install -y --no-install-recommends erlang elixir
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  erlang \
+  erlang-nox \
+  erlang-dev \
+  erlang-src \
+  elixir
 
 # Install mix related "package managers"
 RUN mix local.rebar --force \
@@ -53,8 +59,7 @@ RUN export NVM_DIR="/root/.nvm" \
   && npm install
 
 RUN mix compile \
-  && MIX_ENV=prod mix compile \
-  && MIX_ENV=prod mix phoenix.digest
+  && phoenix.digest
 
 ADD .docker/start.sh /start.sh
 
