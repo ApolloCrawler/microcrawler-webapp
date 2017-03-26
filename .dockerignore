@@ -6,6 +6,12 @@ lib-cov
 *.pid
 *.gz
 
+# App artifacts
+_build/
+db/
+deps/
+/*.ez
+
 users.dets
 
 .git

@@ -3,7 +3,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
 
   def project do
     [app: :microcrawler_webapp,
-     version: "0.0.2",
+     version: "0.0.7",
      elixir: "~> 1.2",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
@@ -21,7 +21,6 @@ defmodule MicrocrawlerWebapp.Mixfile do
       # TODO: Try to keep in
       applications: [
         :elastix,
-        :graphql,
         :phoenix,
         # :phoenix_pubsub_rabbitmq,
         :phoenix_pubsub,
@@ -45,26 +44,24 @@ defmodule MicrocrawlerWebapp.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:comeonin, "~> 2.3"},
-      {:credo, "~> 0.4", only: [:dev, :test]},
-      {:dialyxir, "~> 0.3.5", only: [:dev]},
-      {:elastix, "~> 0.2.0"},
-      {:graphql, "~> 0.3"},
-      {:guardian, "~> 0.13.0"},
-      {:httpoison, "~> 0.9.2"},
-      {:phoenix, "~> 1.2.1", override: true},
+      {:comeonin, "~> 2.6"},
+      {:credo, "~> 0.7", only: [:dev, :test]},
+      {:dialyxir, "~> 0.5", only: [:dev]},
+      {:elastix, "~> 0.3"},
+      {:guardian, "~> 0.14"},
+      {:httpoison, "~> 0.11"},
+      {:phoenix, "~> 1.2.3", override: true},
       {:phoenix_pubsub, "~> 1.0"},
-      {:phoenix_ecto, "~> 3.0"},
-      {:phoenix_html, "~> 2.6"},
+      {:phoenix_ecto, "~> 3.2"},
+      {:phoenix_html, "~> 2.9"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:poison, "~> 2.2.0", override: true},
       {:poolboy, "~> 1.5.1", override: true},
       {:uuid, "~> 1.1" },
-      {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"},
-      {:amqp_client, git: "https://github.com/jbrisbin/amqp_client.git", override: true},
-      {:amqp, "~> 0.1.4"},
-      {:execjs, "~> 1.1"}
+      {:gettext, "~> 0.13"},
+      {:cowboy, "~> 1.1"},
+      {:amqp_client, "~> 3.6" },
+      {:amqp, "~> 0.1"}
     ]
   end
 

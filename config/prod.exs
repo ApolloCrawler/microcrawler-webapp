@@ -13,8 +13,9 @@ use Mix.Config
 # which you typically run after static files are built.
 config :microcrawler_webapp, MicrocrawlerWebapp.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/manifest.json"
+#  url: [host: "localhost", port: 4000],
+  cache_static_manifest: "priv/static/manifest.json",
+  check_origin: false
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -59,3 +60,19 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
 import_config "prod.secret.exs"
+
+# Configure your AMQP
+config :amqp,
+  username: System.get_env("AMQP_USERNAME") || "guest",
+  password: System.get_env("AMQP_PASSWORD") || "guest",
+  vhost: System.get_env("AMQP_VHOST") || "/",
+  hostname: System.get_env("AMQP_HOSTNAME") || "localhost"
+
+config :microcrawler_webapp, MicrocrawlerWebapp.Couchbase,
+  url: System.get_env("GAUC_URL") || "http://localhost:5000",
+  bucket: System.get_env("GAUC_BUCKET") || "default"
+
+config :microcrawler_webapp, MicrocrawlerWebapp.Elasticsearch,
+  url: System.get_env("ELASTIC_URL") || "http://elastic:changeme@localhost:9200",
+  index: System.get_env("ELASTIC_INDEX") || "default",
+  doc_type: System.get_env("ELASTIC_DOC_TYPE") || "default"
