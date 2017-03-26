@@ -92,7 +92,6 @@ defmodule MicrocrawlerWebapp.IpInfo do
   @moduledoc """
   TODO
   """
-
   require MicrocrawlerWebapp.IpInfoLoader
 
   alias MicrocrawlerWebapp.IpInfoLoader
@@ -107,7 +106,7 @@ defmodule MicrocrawlerWebapp.IpInfo do
   @external_resource Path.join(@dir ++ ["delegated-ripencc-latest"])
 
   def for(ip) do
-    search(IpInfoLoader.ip_to_int(ip), all_ranges)
+    search(IpInfoLoader.ip_to_int(ip), all_ranges())
   end
 
   defp search(ip, ranges) do
@@ -134,4 +133,3 @@ defmodule MicrocrawlerWebapp.IpInfo do
     unquote(Macro.escape(infos))
   end
 end
-

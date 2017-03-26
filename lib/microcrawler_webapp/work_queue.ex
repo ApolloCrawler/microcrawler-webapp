@@ -14,7 +14,7 @@ defmodule MicrocrawlerWebapp.WorkQueue do
   alias AMQP.Basic
 
   def open! do
-    {:ok, work_queue} = open
+    {:ok, work_queue} = open()
     work_queue
   end
 
@@ -57,10 +57,8 @@ defmodule MicrocrawlerWebapp.WorkQueue do
   end
 
   def close(queue) do
-    try do
-      Connection.close(queue.conn)
-    catch
-      :exit, reason -> Logger.error "Rabbit close failed: #{inspect(reason)}"
-    end
+    Connection.close(queue.conn)
+  catch
+    :exit, reason -> Logger.error "Rabbit close failed: #{inspect(reason)}"
   end
 end

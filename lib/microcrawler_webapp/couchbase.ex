@@ -154,15 +154,15 @@ defmodule MicrocrawlerWebapp.Couchbase do
     Application.get_env(:microcrawler_webapp, Couchbase)[:bucket]
   end
 
-  defp url() do
+  defp url do
     Application.get_env(:microcrawler_webapp, Couchbase)[:url]
   end
 
-  def url_doc() do
-    "#{url}/bucket/#{bucket}/doc/"
+  def url_doc do
+    "#{url()}/bucket/#{bucket()}/doc/"
   end
 
   def url_doc_id(id) do
-    "#{url}/bucket/#{bucket}/doc/#{id}"
+    "#{url()}/bucket/#{bucket()}/doc/#{id}"
   end
 end

@@ -14,7 +14,7 @@ defmodule MicrocrawlerWebapp.WorkerChannel do
   alias MicrocrawlerWebapp.IpInfo
   alias MicrocrawlerWebapp.WorkQueue
 
-  def send_joined_workers_info() do
+  def send_joined_workers_info do
     Endpoint.broadcast("worker:lobby", "send_worker_info", %{})
   end
 

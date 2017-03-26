@@ -12,7 +12,7 @@ defmodule MicrocrawlerWebapp.Transports.WebSocket do
   defdelegate ws_terminate(reason, state), to: WebSocket
   defdelegate ws_close(state), to: WebSocket
 
-  def default_config() do
+  def default_config do
     WebSocket.default_config() ++ [cowboy: CowboyWebSocket]
   end
 

@@ -10,16 +10,16 @@ defmodule MicrocrawlerWebapp.ActiveWorkers do
   alias MicrocrawlerWebapp.WorkerChannel
   alias MicrocrawlerWebapp.ClientChannel
 
-  def start_link() do
+  def start_link do
     GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
-  def joined_workers() do
+  def joined_workers do
     GenServer.call(__MODULE__, :joined_workers)
   end
 
   def update_joined_worker_info(worker) do
-    GenServer.cast(__MODULE__, {:update_joined_worker_info, self, worker})
+    GenServer.cast(__MODULE__, {:update_joined_worker_info, self(), worker})
   end
 
   def init(state) do

@@ -32,13 +32,6 @@ defmodule MicrocrawlerWebapp.Router do
       typ: "access"
   end
 
-  pipeline :graphql do
-    plug :accepts, ["json"]
-    plug Guardian.Plug.VerifyHeader
-    # plug Guardian.Plug.VerifySession
-    plug Guardian.Plug.LoadResource
-  end
-
   scope "/user", MicrocrawlerWebapp do
     pipe_through [:browser, :browser_session, :static_layout]
 
@@ -77,12 +70,6 @@ defmodule MicrocrawlerWebapp.Router do
     post "/auth/renew_worker_jwt", AuthController, :renew_worker_jwt
     post "/auth/signout", AuthController, :sign_out
     get  "/auth/user", AuthController, :user_details
-  end
-
-  scope "/graphql", MicrocrawlerWebapp do
-    pipe_through :graphql
-
-    get "/", GraphqlController, :index
   end
 
   scope "/", MicrocrawlerWebapp do
