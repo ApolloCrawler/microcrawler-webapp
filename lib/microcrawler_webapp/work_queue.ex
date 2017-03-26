@@ -14,7 +14,7 @@ defmodule MicrocrawlerWebapp.WorkQueue do
   alias AMQP.Basic
 
   def open! do
-    {:ok, work_queue} = open
+    {:ok, work_queue} = open()
     work_queue
   end
 

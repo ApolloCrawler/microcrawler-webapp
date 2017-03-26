@@ -106,7 +106,7 @@ defmodule MicrocrawlerWebapp.IpInfo do
   @external_resource Path.join(@dir ++ ["delegated-ripencc-latest"])
 
   def for(ip) do
-    search(IpInfoLoader.ip_to_int(ip), all_ranges)
+    search(IpInfoLoader.ip_to_int(ip), all_ranges())
   end
 
   defp search(ip, ranges) do

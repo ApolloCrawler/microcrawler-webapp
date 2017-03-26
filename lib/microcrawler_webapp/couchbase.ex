@@ -159,10 +159,10 @@ defmodule MicrocrawlerWebapp.Couchbase do
   end
 
   def url_doc do
-    "#{url}/bucket/#{bucket}/doc/"
+    "#{url()}/bucket/#{bucket()}/doc/"
   end
 
   def url_doc_id(id) do
-    "#{url}/bucket/#{bucket}/doc/#{id}"
+    "#{url()}/bucket/#{bucket()}/doc/#{id}"
   end
 end

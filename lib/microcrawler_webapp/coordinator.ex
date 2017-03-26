@@ -38,7 +38,7 @@ defmodule MicrocrawlerWebapp.Coordinator do
   end
 
   defp request(type, key, ttl) do
-    msg(type: type, ttl: ttl, pid: self, key: key)
+    msg(type: type, ttl: ttl, pid: self(), key: key)
   end
 
   def handle_call(msg(type: :requested) = request, from, state) do
