@@ -3,13 +3,20 @@ defmodule MicrocrawlerWebapp.Users do
   TODO
   """
 
+  require Logger
+
   use GenServer
 
   alias MicrocrawlerWebapp.User
+  alias MicrocrawlerWebapp.Users
   alias Ecto.Changeset
 
   def start_link(dets_name) do
-    GenServer.start_link(__MODULE__, dets_name, name: __MODULE__)
+    {:ok, pid} = GenServer.start_link(__MODULE__, dets_name, name: __MODULE__)
+    create_predefined_users(
+      Application.get_env(:microcrawler_webapp, Users)[:predefined]
+    )
+    {:ok, pid}
   end
 
   def insert(changeset) do
@@ -90,5 +97,19 @@ defmodule MicrocrawlerWebapp.Users do
       error ->
         error
     end
+  end
+
+  defp create_predefined_users(users) do
+    Enum.each(users, fn(user) ->
+      user = %User{email: user.email, password: user.password}
+             |> User.hash_password
+             |> User.generate_token
+      case GenServer.call(__MODULE__, {:create, user}) do
+        {:ok, _user} ->
+          Logger.info "Predefined user '#{user.email}' created"
+        {:error, :already_exists} ->
+          Logger.warn "Predefined user '#{user.email}' already exists"
+      end
+    end)
   end
 end
