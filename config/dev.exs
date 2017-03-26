@@ -48,3 +48,8 @@ config :microcrawler_webapp, MicrocrawlerWebapp.Elasticsearch,
   url: System.get_env("ELASTIC_URL") || "http://elastic:changeme@localhost:9200",
   index: System.get_env("ELASTIC_INDEX") || "default",
   doc_type: System.get_env("ELASTIC_DOC_TYPE") || "default"
+
+config :microcrawler_webapp, MicrocrawlerWebapp.Users,
+  predefined: [
+    %{email: "montana@example.com", password: "wildhack"}
+  ]
