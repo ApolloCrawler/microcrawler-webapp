@@ -13,8 +13,9 @@ use Mix.Config
 # which you typically run after static files are built.
 config :microcrawler_webapp, MicrocrawlerWebapp.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [host: "localhost", port: 4000],
-  cache_static_manifest: "priv/static/manifest.json"
+#  url: [host: "localhost", port: 4000],
+  cache_static_manifest: "priv/static/manifest.json",
+  check_origin: false
 
 # Do not print debug messages in production
 config :logger, level: :info
