@@ -3,7 +3,7 @@ defmodule MicrocrawlerWebapp.Mixfile do
 
   def project do
     [app: :microcrawler_webapp,
-     version: "0.0.7",
+     version: "0.0.9",
      elixir: "~> 1.2",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
@@ -44,12 +44,13 @@ defmodule MicrocrawlerWebapp.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:comeonin, "~> 2.6"},
+      {:comeonin, "~> 3.0"},
       {:credo, "~> 0.7", only: [:dev, :test]},
       {:dialyxir, "~> 0.5", only: [:dev]},
       {:elastix, "~> 0.3"},
       {:guardian, "~> 0.14"},
       {:httpoison, "~> 0.11"},
+      {:passport, git: "https://github.com/opendrops/passport.git"},
       {:phoenix, "~> 1.2.3", override: true},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
