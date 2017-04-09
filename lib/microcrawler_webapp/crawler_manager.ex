@@ -67,7 +67,7 @@ defmodule MicrocrawlerWebapp.CrawlerManager do
     |> Enum.map(fn(x) -> %{
       name: Map.fetch!(x, "name"),
       version: Map.fetch!(x, "version"),
-      description: Map.fetch!(x, "version"),
+      description: Map.fetch!(x, "description"),
     } end)
     |> Enum.reduce(%{}, fn(e, a) ->
       Map.put(a, Map.fetch!(e, :name), e)
