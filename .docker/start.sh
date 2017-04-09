@@ -1,11 +1,13 @@
 #!/bin/bash
 
-# source /root/.nvm/nvm.sh
-
-mix phoenix.server
+mix deps.compile \
+  && mix compile \
+  && mix phoenix.digest \
+  && mix ecto.create \
+  && mix phoenix.server
 
 echo "Press [CTRL+C] to stop.."
 while :
 do
-	sleep 10
+	sleep 60
 done

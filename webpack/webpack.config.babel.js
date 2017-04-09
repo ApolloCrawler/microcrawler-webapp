@@ -73,10 +73,8 @@ module.exports = {
       __DEVTOOLS__: true  // <-------- DISABLE redux-devtools HERE
     }),
     new WriteFilePlugin(),
-    new ExtractTextPlugin('app.css', {
-      allChunks: true
-    }),
-    new webpack.optimize.OccurenceOrderPlugin(),
+    // new ExtractTextPlugin('app.css'),
+    // new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     // new webpack.optimize.DedupePlugin(),
     // new webpack.optimize.UglifyJsPlugin({

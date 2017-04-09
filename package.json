@@ -1,6 +1,6 @@
 {
   "name": "microcrawler-webapp",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "Microcrawler Web Application",
   "repository": {
     "type": "git",
@@ -45,7 +45,6 @@
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "mathjs": "^3.5.3",
-    "microcrawler-crawler-all": "0.0.18",
     "mocha": "^3.1.0",
     "moment": "^2.15.1",
     "node-sass": "^3.10.1",
@@ -89,7 +88,6 @@
     "babel-plugin-transform-react-display-name": "^6.8.0",
     "babel-plugin-transform-runtime": "^6.15.0",
     "babel-preset-react": "^6.16.0",
-    "babel-preset-stage-0": "^6.16.0",
     "brunch": "2.8.2",
     "clean-css-brunch": "~2.0.0",
     "css-brunch": "~2.6.1",

@@ -1,11 +1,9 @@
-# FROM bitwalker/alpine-erlang:19.2.1
 FROM bitwalker/alpine-elixir-phoenix:latest
 
 # Set the locale
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
-ENV MIX_ENV prod
 ENV TERM xterm
 
 RUN apk add --update \
@@ -16,18 +14,6 @@ RUN apk add --update \
   make \
   gcc \
   g++ \
-#  erlang \
-#  erlang-mnesia \
-#  erlang-public-key \
-#  erlang-crypto \
-#  erlang-ssl \
-#  erlang-sasl \
-#  erlang-asn1 \
-#  erlang-inets \
-#  erlang-os-mon \
-#  erlang-xmerl \
-#  erlang-eldap \
-#  erlang-syntax-tools \
   && rm -rf /var/cache/apk/*
 
 # Switch to directory with sources
@@ -41,13 +27,7 @@ RUN mix local.hex --force && \
 ADD . .
 
 RUN mix deps.get \
-  mix deps.compile
-
-RUN npm install
-
-RUN mix compile \
-  && mix phoenix.digest \
-  && mix ecto.create
+    && npm install
 
 ADD .docker/start.sh /start.sh
 
